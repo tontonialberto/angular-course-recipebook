@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Shopping List</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <input type="text" [(ngModel)]="newIngredientName" placeholder="Type here your ingredient..." class="form-control">
+    </div>
+    <div class="col-md-4">
+        <button [disabled]="newIngredientName === ''" (click)="onAddIngredientClick()" class="btn btn-success btn-block">Add Ingredient</button>
+    </div>
+</div>
+<div class="row">
+    <div 
+    *ngFor="let ingredient of ingredients" 
+    class="col-sm-4 col-md-3">
+        <div (click)="onIngredientClick(ingredient)">
+            {{ ingredient.name }}, {{ ingredient.quantity }}
+        </div>
+        <button type="button" class="btn btn-info" (click)="1">Edit</button>
+    </div>
+</div>
