@@ -3,6 +3,12 @@
         <h2>Shopping List</h2>
     </div>
 </div>
+<!-- INGREDIENT ADD BEGIN -->
+<div class="row">
+    <div class="col-md-12">
+        <h3>Add Ingredient</h3>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-8">
         <input type="text" [(ngModel)]="newIngredientName" placeholder="Type here your ingredient..." class="form-control">
@@ -11,13 +17,32 @@
         <button [disabled]="newIngredientName === ''" (click)="onAddIngredientClick()" class="btn btn-success btn-block">Add Ingredient</button>
     </div>
 </div>
+<!-- INGREDIENT ADD END -->
+<hr>
+<!-- INGREDIENT EDIT BEGIN -->
+<app-ingredient-edit 
+[ingredientId]="editingIngredient.id"
+[ingredientName]="editingIngredient.name" 
+[ingredientQuantity]="editingIngredient.quantity" 
+(completed)="onIngredientUpdated($event)">
+</app-ingredient-edit>
+<!-- INGREDIENT EDIT END -->
+<hr>
+<!-- INGREDIENTS LIST BEGIN -->
 <div class="row">
     <div 
     *ngFor="let ingredient of ingredients" 
     class="col-sm-4 col-md-3">
-        <div (click)="onIngredientClick(ingredient)">
-            {{ ingredient.name }}, {{ ingredient.quantity }}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 (click)="onIngredientClick(ingredient)" class="panel-title">
+                    {{ ingredient.name }}, {{ ingredient.quantity }}
+                </h3>
+            </div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-info" (click)="onEditIngredientClick(ingredient)">Edit</button>
+            </div>
         </div>
-        <button type="button" class="btn btn-info" (click)="1">Edit</button>
     </div>
 </div>
+<!-- INGREDIENTS LIST END -->

@@ -9,16 +9,20 @@ import { Ingredient } from '../models/Ingredient.model';
 export class ShoppingListComponent implements OnInit {
 
   ingredients: Ingredient[] = [
-    new Ingredient('Carrots', '1kg'),
-    new Ingredient('Tomatoes', '1kg'),
-    new Ingredient('Onions', '2'),
-    new Ingredient('Nutella'),
-    new Ingredient('Frozen chicken', '2 bags'),
+    new Ingredient(0, 'Carrots', '1kg'),
+    new Ingredient(1, 'Tomatoes', '1kg'),
+    new Ingredient(2, 'Onions', '2'),
+    new Ingredient(3, 'Nutella'),
+    new Ingredient(4, 'Frozen chicken', '2 bags'),
   ];
 
   newIngredientName: string = '';
 
   newIngredientQuantity: string = '';
+
+  editingIngredient: Ingredient = new Ingredient(-1, '', '');
+
+  lastIngredientId = 4;
 
   constructor() { }
 
@@ -33,8 +37,20 @@ export class ShoppingListComponent implements OnInit {
   }
 
   onAddIngredientClick(): void {
-    this.ingredients.push(new Ingredient(this.newIngredientName, this.newIngredientQuantity));
+    const id = ++this.lastIngredientId;
+    this.ingredients.push(new Ingredient(id, this.newIngredientName, this.newIngredientQuantity));
     this.newIngredientName = '';
     this.newIngredientQuantity = '';
+  }
+
+  onEditIngredientClick(ingredient: Ingredient): void {
+    this.editingIngredient = ingredient;
+  }
+
+  onIngredientUpdated(updatedIngredient: Ingredient): void {
+    const idx = this.ingredients.findIndex(ingredient => ingredient.id === updatedIngredient.id);
+
+    if(idx !== -1)
+      this.ingredients[idx] = updatedIngredient;
   }
 }
