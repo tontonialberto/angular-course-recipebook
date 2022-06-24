@@ -1,0 +1,12 @@
+<div class="row">
+    <h2 class="text-center">Recipes</h2>
+    <!-- RECIPE LIST ITEM BEGIN -->
+    <div *ngFor="let recipe of recipes" class="col-md-6 col-md-offset-3 media">
+        <hr>
+        <h4>
+            {{ recipe.name }}
+        </h4>
+        <p>{{ recipe.description }}</p>
+    </div>
+    <!-- RECIPE LIST ITEM END -->
+</div>
