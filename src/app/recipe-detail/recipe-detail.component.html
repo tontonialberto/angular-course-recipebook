@@ -7,13 +7,36 @@
         <img [src]="imagePath" [alt]="name" class="img-responsive img-rounded" style="max-width: 70%">
     </div>
     <div class="col-md-6">
-        <p>
-            {{ description }}
-        </p>
-        <div class="form-group">
-            <button class="btn btn-info">
-                Edit
-            </button>
+        <div class="row">
+            <div class="col-md-12">
+                {{ description }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <button class="btn btn-default">
+                        Add to Shopping List
+                    </button>
+                    <button class="btn btn-default">
+                        Edit
+                    </button>
+                    <button class="btn btn-default">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Ingredients</h4>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
