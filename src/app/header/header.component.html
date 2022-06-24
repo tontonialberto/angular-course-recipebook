@@ -11,9 +11,18 @@
         </div>
 
         <div class="navbar-collapse" [ngClass]="{'collapse': !showLinks}" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav">
                 <li><a href="#">Shopping List</a></li>
                 <li><a href="#">Recipes</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" [ngClass]="{'open': openDropdown}">
+                    <a href="#" class="dropdown-toggle" (click)="toggleDropdown()">Manage <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Save Data</a></li>
+                        <li><a href="#">Fetch Data</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

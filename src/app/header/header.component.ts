@@ -10,6 +10,8 @@ export class HeaderComponent implements OnInit {
   // Used for collapsible navbar on mobile devices.
   showLinks: boolean = false;
 
+  openDropdown: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -19,4 +21,7 @@ export class HeaderComponent implements OnInit {
     this.showLinks = !this.showLinks;
   }
 
+  toggleDropdown(): void {
+    this.openDropdown = !this.openDropdown;
+  }
 }
