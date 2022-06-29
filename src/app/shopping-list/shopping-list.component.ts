@@ -22,6 +22,7 @@ export class ShoppingListComponent implements OnInit {
 
   editingIngredient: Ingredient = null;
 
+  // Auto-increment ingredient id generator 
   lastIngredientId = 4;
 
   constructor() { }
