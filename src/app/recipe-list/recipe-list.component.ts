@@ -26,4 +26,8 @@ export class RecipeListComponent implements OnInit {
     if(idx !== -1)
       this.editingRecipe = this.recipes[idx];
   }
+
+  isRecipeSet(): boolean {
+    return this.editingRecipe.id !== -1;
+  }
 }
