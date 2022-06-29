@@ -20,7 +20,7 @@ export class ShoppingListComponent implements OnInit {
 
   newIngredientQuantity: string = '';
 
-  editingIngredient: Ingredient = new Ingredient(-1, '', '');
+  editingIngredient: Ingredient = null;
 
   lastIngredientId = 4;
 

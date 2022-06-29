@@ -20,10 +20,8 @@
 <!-- INGREDIENT ADD END -->
 <hr>
 <!-- INGREDIENT EDIT BEGIN -->
-<app-ingredient-edit 
-    [ingredientId]="editingIngredient.id"
-    [ingredientName]="editingIngredient.name" 
-    [ingredientQuantity]="editingIngredient.quantity" 
+<app-ingredient-edit
+    [ingredient]="editingIngredient"
     (completed)="onIngredientUpdated($event)">
 </app-ingredient-edit>
 <!-- INGREDIENT EDIT END -->
