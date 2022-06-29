@@ -1,7 +1,5 @@
-<app-header></app-header>
+<app-header (navigate)="onNavigationChange($event)"></app-header>
 <div class="container">
-    <app-shopping-list></app-shopping-list>
-    <hr>
-    <app-recipe-list></app-recipe-list>
-    <hr>
+    <app-shopping-list *ngIf="'Shopping List' === activePage"></app-shopping-list>
+    <app-recipe-list *ngIf="'Recipes' === activePage"></app-recipe-list>
 </div>

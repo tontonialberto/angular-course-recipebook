@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
+  // Emitted when a nav link is clicked
+  @Output('navigate') navigateEvent = new EventEmitter<string>(); 
 
   // Used for collapsible navbar on mobile devices.
   showLinks: boolean = false;
@@ -23,5 +26,13 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown(): void {
     this.openDropdown = !this.openDropdown;
+  }
+
+  onShoppingListClick(): void {
+    this.navigateEvent.emit('Shopping List');
+  }
+
+  onRecipesClick(): void {
+    this.navigateEvent.emit('Recipes');
   }
 }
