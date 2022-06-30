@@ -19,20 +19,21 @@ export class DropdownDirective {
 
   @HostBinding('class.open') openDropdown = false;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
-    this.openDropdown = false;
+  constructor(private elementRef: ElementRef) {
   }
 
   ngOnInit() {
-    // Close dropdown whenever user clicks on other parts of the document
-    this.renderer.listen('document', 'click', (event: PointerEvent) => {
-      if(!this.elementRef.nativeElement.contains(event.target)) {
-        this.openDropdown = false;
-      }
-    });
   }
   
-  @HostListener('click') onClick() {
+  @HostListener('click') onClick(): void {
     this.openDropdown = !this.openDropdown;
+  }
+
+  @HostListener('document:click', ['$event']) 
+  onOutsideClick(event: PointerEvent): void {
+    // Close dropdown whenever user clicks on other parts of the document
+    if(!this.elementRef.nativeElement.contains(event.target)) {
+      this.openDropdown = false;
+    }
   }
 }
