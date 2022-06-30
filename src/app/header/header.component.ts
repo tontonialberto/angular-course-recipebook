@@ -24,10 +24,6 @@ export class HeaderComponent implements OnInit {
     this.showLinks = !this.showLinks;
   }
 
-  toggleDropdown(): void {
-    this.openDropdown = !this.openDropdown;
-  }
-
   onShoppingListClick(): void {
     this.navigateEvent.emit('Shopping List');
   }
