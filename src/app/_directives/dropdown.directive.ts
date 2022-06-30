@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Renderer2 } from '@angular/core';
 
 /**
  * This directive can be used to toggle visibility of a Bootstrap 3 dropdown.
@@ -17,39 +17,22 @@ import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 })
 export class DropdownDirective {
 
-  private _openDropdown: boolean = false;
-
-  private get openDropdown() { 
-    return this._openDropdown; 
-  }
-
-  private set openDropdown(open: boolean) {
-    if(open) {
-      this.renderer.addClass(this.elementRef.nativeElement, 'open');
-    }
-    else {
-      this.renderer.removeClass(this.elementRef.nativeElement, 'open');
-    }
-    this._openDropdown = open;
-  }
+  @HostBinding('class.open') openDropdown = false;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {
     this.openDropdown = false;
   }
 
   ngOnInit() {
+    // Close dropdown whenever user clicks on other parts of the document
     this.renderer.listen('document', 'click', (event: PointerEvent) => {
       if(!this.elementRef.nativeElement.contains(event.target)) {
         this.openDropdown = false;
       }
-    })
+    });
   }
   
   @HostListener('click') onClick() {
     this.openDropdown = !this.openDropdown;
-  }
-
-  @HostListener('document:click') onOutsideClick() {
-    
   }
 }
