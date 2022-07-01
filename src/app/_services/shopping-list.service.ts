@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Ingredient } from '../_models/Ingredient.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListService {
+
+  public ingredientsChanged = new EventEmitter<Ingredient[]>();
 
   private idCounter = 4; // Used as an "auto-increment" id generator
 
@@ -19,7 +21,7 @@ export class ShoppingListService {
   constructor() { }
 
   public getAll(): Ingredient[] {
-    return this.ingredients;
+    return this.ingredients.slice();
   }
 
   public getById(id: number): Ingredient | null {
@@ -40,6 +42,7 @@ export class ShoppingListService {
     if(-1 !== idx) {
       this.ingredients.splice(idx, 1);
       removed = true;
+      this.ingredientsChanged.emit(this.ingredients.slice());
     }
 
     return removed;
@@ -48,6 +51,7 @@ export class ShoppingListService {
   public add(name: string, quantity: string): void {
     const newId = ++this.idCounter;
     this.ingredients.push(new Ingredient(newId, name, quantity));
+    this.ingredientsChanged.emit(this.ingredients.slice());
   }
 
   public update(id: number, name: string, quantity: string): boolean {
@@ -58,6 +62,7 @@ export class ShoppingListService {
       ingr.name = name;
       ingr.quantity = quantity;
       updated = true;
+      this.ingredientsChanged.emit(this.ingredients.slice());
     }
 
     return updated;
