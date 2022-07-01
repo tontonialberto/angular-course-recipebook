@@ -8,6 +8,8 @@ export class ShoppingListService {
 
   public ingredientsChanged = new EventEmitter<Ingredient[]>();
 
+  public ingredientSelected = new EventEmitter<Ingredient>();
+
   private idCounter = 4; // Used as an "auto-increment" id generator
 
   private ingredients: Ingredient[] = [

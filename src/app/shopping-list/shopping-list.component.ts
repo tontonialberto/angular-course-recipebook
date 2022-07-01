@@ -15,13 +15,6 @@ export class ShoppingListComponent implements OnInit {
 
   newIngredientQuantity: string = '';
 
-  editingIngredient: Ingredient = null;
-
-  idEditingIngredient: number = -1;
-
-  // Auto-increment ingredient id generator 
-  lastIngredientId = 4;
-
   constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
@@ -46,13 +39,6 @@ export class ShoppingListComponent implements OnInit {
   }
 
   onEditIngredientClick(ingredient: Ingredient): void {
-    this.idEditingIngredient = ingredient.id;
-  }
-
-  onIngredientUpdated(updatedIngredient: Ingredient): void {
-    this.shoppingListService.update(
-      updatedIngredient.id, 
-      updatedIngredient.name, 
-      updatedIngredient.quantity);
+    this.shoppingListService.ingredientSelected.emit(ingredient);
   }
 }
