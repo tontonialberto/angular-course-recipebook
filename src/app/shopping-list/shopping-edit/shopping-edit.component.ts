@@ -3,9 +3,9 @@ import { ShoppingListService } from 'src/app/_services/shopping-list.service';
 import { ShoppingIngredient } from '../../_models/shopping-ingredient.model';
 
 @Component({
-  selector: 'app-ingredient-edit',
-  templateUrl: './ingredient-edit.component.html',
-  styleUrls: ['./ingredient-edit.component.css']
+  selector: 'app-shopping-edit',
+  templateUrl: './shopping-edit.component.html',
+  styleUrls: ['./shopping-edit.component.css']
 })
 export class IngredientEditComponent {
   
