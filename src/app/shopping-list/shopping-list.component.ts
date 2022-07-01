@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../_models/Ingredient.model';
+import { ShoppingListService } from '../_services/shopping-list.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -8,13 +9,7 @@ import { Ingredient } from '../_models/Ingredient.model';
 })
 export class ShoppingListComponent implements OnInit {
 
-  ingredients: Ingredient[] = [
-    new Ingredient(0, 'Carrots', '1kg'),
-    new Ingredient(1, 'Tomatoes', '1kg'),
-    new Ingredient(2, 'Onions', '2'),
-    new Ingredient(3, 'Nutella'),
-    new Ingredient(4, 'Frozen chicken', '2 bags'),
-  ];
+  ingredients: Ingredient[] = [];
 
   newIngredientName: string = '';
 
@@ -22,36 +17,36 @@ export class ShoppingListComponent implements OnInit {
 
   editingIngredient: Ingredient = null;
 
+  idEditingIngredient: number = -1;
+
   // Auto-increment ingredient id generator 
   lastIngredientId = 4;
 
-  constructor() { }
+  constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
+    this.ingredients = this.shoppingListService.getAll();
   }
 
   onIngredientClick(ingredient: Ingredient): void {
     // Remove from the array the clicked ingredient.
-    this.ingredients = this.ingredients.filter((element => {
-      return (element.name !== ingredient.name) || (element.quantity !== ingredient.quantity);
-    }));
+    this.shoppingListService.remove(ingredient.id);
   }
 
   onAddIngredientClick(): void {
-    const id = ++this.lastIngredientId;
-    this.ingredients.push(new Ingredient(id, this.newIngredientName, this.newIngredientQuantity));
+    this.shoppingListService.add(this.newIngredientName, this.newIngredientQuantity);
     this.newIngredientName = '';
     this.newIngredientQuantity = '';
   }
 
   onEditIngredientClick(ingredient: Ingredient): void {
-    this.editingIngredient = ingredient;
+    this.idEditingIngredient = ingredient.id;
   }
 
   onIngredientUpdated(updatedIngredient: Ingredient): void {
-    const idx = this.ingredients.findIndex(ingredient => ingredient.id === updatedIngredient.id);
-
-    if(idx !== -1)
-      this.ingredients[idx] = updatedIngredient;
+    this.shoppingListService.update(
+      updatedIngredient.id, 
+      updatedIngredient.name, 
+      updatedIngredient.quantity);
   }
 }
