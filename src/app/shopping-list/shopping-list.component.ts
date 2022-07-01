@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Ingredient } from '../_models/Ingredient.model';
+import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 import { ShoppingListService } from '../_services/shopping-list.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ShoppingListService } from '../_services/shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit {
 
-  ingredients: Ingredient[] = [];
+  ingredients: ShoppingIngredient[] = [];
 
   newIngredientName: string = '';
 
@@ -21,13 +21,13 @@ export class ShoppingListComponent implements OnInit {
     this.ingredients = this.shoppingListService.getAll();
 
     this.shoppingListService.ingredientsChanged.subscribe(
-      (ingredients: Ingredient[]) => {
+      (ingredients: ShoppingIngredient[]) => {
         this.ingredients = ingredients;
       }
     );
   }
 
-  onIngredientClick(ingredient: Ingredient): void {
+  onIngredientClick(ingredient: ShoppingIngredient): void {
     // Remove from the array the clicked ingredient.
     this.shoppingListService.remove(ingredient.id);
   }
@@ -38,7 +38,7 @@ export class ShoppingListComponent implements OnInit {
     this.newIngredientQuantity = '';
   }
 
-  onEditIngredientClick(ingredient: Ingredient): void {
+  onEditIngredientClick(ingredient: ShoppingIngredient): void {
     this.shoppingListService.ingredientSelected.emit(ingredient);
   }
 }

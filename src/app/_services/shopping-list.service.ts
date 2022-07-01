@@ -1,32 +1,32 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Ingredient } from '../_models/Ingredient.model';
+import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListService {
 
-  public ingredientsChanged = new EventEmitter<Ingredient[]>();
+  public ingredientsChanged = new EventEmitter<ShoppingIngredient[]>();
 
-  public ingredientSelected = new EventEmitter<Ingredient>();
+  public ingredientSelected = new EventEmitter<ShoppingIngredient>();
 
   private idCounter = 4; // Used as an "auto-increment" id generator
 
-  private ingredients: Ingredient[] = [
-    new Ingredient(0, 'Carrots', '1kg'),
-    new Ingredient(1, 'Tomatoes', '1kg'),
-    new Ingredient(2, 'Onions', '2'),
-    new Ingredient(3, 'Nutella', null),
-    new Ingredient(4, 'Frozen chicken', '2 bags'),
+  private ingredients: ShoppingIngredient[] = [
+    new ShoppingIngredient(0, 'Carrots', '1kg'),
+    new ShoppingIngredient(1, 'Tomatoes', '1kg'),
+    new ShoppingIngredient(2, 'Onions', '2'),
+    new ShoppingIngredient(3, 'Nutella', null),
+    new ShoppingIngredient(4, 'Frozen chicken', '2 bags'),
   ];
 
   constructor() { }
 
-  public getAll(): Ingredient[] {
+  public getAll(): ShoppingIngredient[] {
     return this.ingredients.slice();
   }
 
-  public getById(id: number): Ingredient | null {
+  public getById(id: number): ShoppingIngredient | null {
     const ingredient = this.ingredients.find(ingredient => id === ingredient.id);
     let result = null;
 
@@ -52,7 +52,7 @@ export class ShoppingListService {
 
   public add(name: string, quantity: string): void {
     const newId = ++this.idCounter;
-    this.ingredients.push(new Ingredient(newId, name, quantity));
+    this.ingredients.push(new ShoppingIngredient(newId, name, quantity));
     this.ingredientsChanged.emit(this.ingredients.slice());
   }
 

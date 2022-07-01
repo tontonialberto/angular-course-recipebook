@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Recipe } from '../_models/Recipe.model';
+import { Recipe } from '../_models/recipe.model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 import { AfterContentChecked, AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ShoppingListService } from 'src/app/_services/shopping-list.service';
-import { Ingredient } from '../../_models/Ingredient.model';
+import { ShoppingIngredient } from '../../_models/shopping-ingredient.model';
 
 @Component({
   selector: 'app-ingredient-edit',
@@ -9,13 +9,13 @@ import { Ingredient } from '../../_models/Ingredient.model';
 })
 export class IngredientEditComponent {
   
-  ingredient: Ingredient = null;
+  ingredient: ShoppingIngredient = null;
 
   constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
     this.shoppingListService.ingredientSelected.subscribe(
-      (ingredient: Ingredient) => {
+      (ingredient: ShoppingIngredient) => {
         this.ingredient = { ...ingredient };
       }
     );

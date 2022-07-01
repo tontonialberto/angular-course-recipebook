@@ -1,4 +1,4 @@
-export class Ingredient {
+export class ShoppingIngredient {
     id: number;
     name: string;
     quantity: string;
