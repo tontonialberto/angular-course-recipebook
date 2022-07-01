@@ -12,7 +12,7 @@ export class ShoppingListService {
     new Ingredient(0, 'Carrots', '1kg'),
     new Ingredient(1, 'Tomatoes', '1kg'),
     new Ingredient(2, 'Onions', '2'),
-    new Ingredient(3, 'Nutella'),
+    new Ingredient(3, 'Nutella', null),
     new Ingredient(4, 'Frozen chicken', '2 bags'),
   ];
 
