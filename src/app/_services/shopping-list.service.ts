@@ -58,7 +58,7 @@ export class ShoppingListService {
     const ingr = this.ingredients.find(ingredient => id === ingredient.id);
     let updated = false;
 
-    if(null !== ingr) {
+    if(undefined !== ingr) {
       ingr.name = name;
       ingr.quantity = quantity;
       updated = true;

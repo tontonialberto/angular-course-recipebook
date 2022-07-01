@@ -29,7 +29,7 @@ export class IngredientEditComponent {
   constructor(private shoppingListService: ShoppingListService) { }
 
   onUpdateClick(): void {
-    if(null !== this.ingredient && null !== this.shoppingListService.getById(this.id)) {
+    if(null !== this.ingredient) {
       const id = this.ingredient.id;
       const name = this.ingredient.name;
       const quantity = this.ingredient.quantity;
