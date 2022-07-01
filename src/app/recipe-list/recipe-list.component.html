@@ -6,7 +6,7 @@
             <hr>
             <div class="col-md-6">
                 <h4>
-                    <a (click)="onRecipeClick(recipe.id)">
+                    <a (click)="onRecipeClick(recipe)">
                         {{ recipe.name }}
                     </a>
                 </h4>
@@ -19,8 +19,7 @@
     </div>
     <!-- RECIPE LIST ITEM END -->
 </div>
-<app-recipe-detail [recipeName]="editingRecipe.name" [recipeDescription]="editingRecipe.description" [recipeImagePath]="editingRecipe.imagePath"
-    *ngIf="isRecipeSet(); else noRecipeInfo"></app-recipe-detail>
+<app-recipe-detail *ngIf="isRecipeSet; else noRecipeInfo"></app-recipe-detail>
 <ng-template #noRecipeInfo>
     <div class="row">
         <div class="col-md-12">
