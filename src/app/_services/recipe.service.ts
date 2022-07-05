@@ -36,6 +36,16 @@ export class RecipeService {
     return this.recipes.slice();
   }
 
+  public getById(id: number): Recipe {
+    let result = this.recipes.find((r: Recipe) => id === r.id);
+    
+    if(undefined === result) {
+      result = null;
+    }
+
+    return result;
+  }
+
   public addToShoppingList(ingredients: Ingredient[]): void {
     for(const ingredient of ingredients) {
       this.shoppingListService.add(ingredient.name, ingredient.quantity);
