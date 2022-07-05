@@ -2,11 +2,11 @@
     <div class="col-md-12">
         <div class="form-group">
             <label for="">Recipe Name</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" [(ngModel)]="recipe.name">
         </div>
         <div class="form-group">
             <label for="">Description</label>
-            <textarea class="form-control" rows="4"></textarea>
+            <textarea class="form-control" rows="4" [(ngModel)]="recipe.description"></textarea>
         </div>
         <div class="form-group">
             <button class="btn btn-default">Save</button>
