@@ -9,8 +9,6 @@ import { ShoppingListService } from './shopping-list.service';
 })
 export class RecipeService {
 
-  public recipeSelected = new BehaviorSubject<Recipe>(null);
-
   private recipes: Recipe[] = [
     new Recipe(0, 'Carbonara Spaghetti', 'A very good dish.',
       'https://www.tavolartegusto.it/wp/wp-content/uploads/2020/03/Carbonara-Spaghetti-alla-carbonara-Ricetta-Carbonara.jpg',

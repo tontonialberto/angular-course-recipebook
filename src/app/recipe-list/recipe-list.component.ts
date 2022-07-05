@@ -9,18 +9,11 @@ import { RecipeService } from '../_services/recipe.service';
 })
 export class RecipeListComponent implements OnInit {
 
-  isRecipeSet: boolean = false;
-
   recipes: Recipe[] = [];
 
   constructor(private recipeService: RecipeService) { }
 
   ngOnInit(): void {
     this.recipes = this.recipeService.getAll();
-  }
-
-  onRecipeClick(recipe: Recipe): void {
-    this.isRecipeSet = true;
-    this.recipeService.recipeSelected.next(recipe);
   }
 }

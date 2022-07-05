@@ -5,7 +5,7 @@
             <div *ngFor="let recipe of recipes" class="col-md-12 media">
                 <div class="col-md-12">
                     <h4>
-                        <a [routerLink]="['/recipes', recipe.id]" (click)="onRecipeClick(recipe)">
+                        <a [routerLink]="['/recipes', recipe.id]">
                             {{ recipe.name }}
                         </a>
                     </h4>
@@ -19,13 +19,6 @@
         <div class="col-md-8 media">
             <div class="col-md-12">
                 <router-outlet></router-outlet>
-                <!--
-
-                    <app-recipe-detail *ngIf="isRecipeSet; else noRecipeInfo"></app-recipe-detail>
-                    <ng-template #noRecipeInfo>
-                            <h3>Please select a recipe.</h3>
-                    </ng-template>
-                -->
             </div>
         </div>
     </div>
