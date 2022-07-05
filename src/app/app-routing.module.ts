@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/shopping-list', pathMatch: 'full' },
   { path: 'shopping-list', component: ShoppingListComponent },
   { path: 'recipes', component: RecipeListComponent, children: [
+    { path: '', component: ErrorPageComponent, data: { message: 'Please select a recipe!' }},
     { path: ':id', component: RecipeDetailComponent, resolve: { recipe: RecipeResolver } }
   ] },
   { path: '**', component: ErrorPageComponent, data: { message: 'Oops.. this page does not exist!' } }
