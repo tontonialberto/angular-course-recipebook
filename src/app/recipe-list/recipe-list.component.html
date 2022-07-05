@@ -1,29 +1,28 @@
 <div class="row">
-    <h2 class="text-center">Recipes</h2>
-    <!-- RECIPE LIST ITEM BEGIN -->
-    <div *ngFor="let recipe of recipes" class="col-md-6 col-md-offset-3 media">
-        <div class="row">
-            <hr>
-            <div class="col-md-6">
-                <h4>
-                    <a (click)="onRecipeClick(recipe)">
-                        {{ recipe.name }}
-                    </a>
-                </h4>
-                <p>{{ recipe.description }}</p>
-            </div>
-            <div class="col-md-6">
-                <img [src]="recipe.imagePath" [alt]="recipe.name" class="img-responsive img-rounded" style="max-height: 200px;">
-            </div>
-        </div>
-    </div>
-    <!-- RECIPE LIST ITEM END -->
-</div>
-<app-recipe-detail *ngIf="isRecipeSet; else noRecipeInfo"></app-recipe-detail>
-<ng-template #noRecipeInfo>
     <div class="row">
-        <div class="col-md-12">
-            <p>Please select a recipe.</p>
+        <div class="col-md-4">
+            <!-- RECIPE LIST ITEM BEGIN -->
+            <div *ngFor="let recipe of recipes" class="col-md-12 media">
+                <div class="col-md-12">
+                    <h4>
+                        <a (click)="onRecipeClick(recipe)">
+                            {{ recipe.name }}
+                        </a>
+                    </h4>
+                    <p>{{ recipe.description }}</p>
+                    <img [src]="recipe.imagePath" [alt]="recipe.name" class="img-responsive img-rounded"
+                        style="max-height: 200px;">
+                </div>
+            </div>
+            <!-- RECIPE LIST ITEM END -->
+        </div>
+        <div class="col-md-8 media">
+            <div class="col-md-12">
+                <app-recipe-detail *ngIf="isRecipeSet; else noRecipeInfo"></app-recipe-detail>
+                <ng-template #noRecipeInfo>
+                        <h3>Please select a recipe.</h3>
+                </ng-template>
+            </div>
         </div>
     </div>
-</ng-template>
+</div>
