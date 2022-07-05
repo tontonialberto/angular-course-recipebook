@@ -12,8 +12,9 @@ const routes: Routes = [
   { path: 'shopping-list', component: ShoppingListComponent },
   { path: 'recipes', component: RecipeListComponent, children: [
     { path: '', component: ErrorPageComponent, data: { message: 'Please select a recipe!' }},
+    { path: 'new', component: RecipeEditComponent },
     { path: ':id', component: RecipeDetailComponent, resolve: { recipe: RecipeResolver } },
-    { path: ':id/edit', component: RecipeEditComponent, resolve: { recipe: RecipeResolver } }
+    { path: ':id/edit', component: RecipeEditComponent }
   ] },
   { path: '**', component: ErrorPageComponent, data: { message: 'Oops.. this page does not exist!' } }
 ];

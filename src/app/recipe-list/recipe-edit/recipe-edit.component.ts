@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Params } from '@angular/router';
 import { Recipe } from 'src/app/_models/recipe.model';
+import { RecipeService } from 'src/app/_services/recipe.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -9,17 +10,24 @@ import { Recipe } from 'src/app/_models/recipe.model';
 })
 export class RecipeEditComponent implements OnInit {
 
-  recipe: Recipe = null;
+  // If false, we are in "new recipe" mode.
+  editMode: boolean = false;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService) { }
 
   ngOnInit(): void {
-    this.route.data.subscribe(
-      (data: Data) => {
-        this.recipe = data.recipe;
-        console.log(this.recipe)
+    this.route.params.subscribe(
+      (params: Params) => {
+        if(params.id) {
+          this.editMode = true;
+          console.log('Edit mode');
+        }
+        else {
+          this.editMode = false;
+          console.log('Create mode');
+        }
       }
-    );
+    )
   }
 
 }
