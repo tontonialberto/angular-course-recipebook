@@ -18,7 +18,7 @@
                     <button (click)="onAddToShoppingList(recipe.ingredients)" class="btn btn-default">
                         Add to Shopping List
                     </button>
-                    <button class="btn btn-default">
+                    <button [routerLink]="['edit']" class="btn btn-default">
                         Edit
                     </button>
                     <button class="btn btn-default">

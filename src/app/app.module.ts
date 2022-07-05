@@ -11,6 +11,7 @@ import { HeaderComponent } from './header/header.component';
 import { RecipeDetailComponent } from './recipe-list/recipe-detail/recipe-detail.component';
 import { DropdownDirective } from './_directives/dropdown.directive';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { RecipeEditComponent } from './recipe-list/recipe-edit/recipe-edit.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     HeaderComponent,
     RecipeDetailComponent,
     DropdownDirective,
-    ErrorPageComponent
+    ErrorPageComponent,
+    RecipeEditComponent
   ],
   imports: [
     BrowserModule,
