@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 
 @Injectable({
@@ -6,9 +7,9 @@ import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 })
 export class ShoppingListService {
 
-  public ingredientsChanged = new EventEmitter<ShoppingIngredient[]>();
+  public ingredientsChanged = new Subject<ShoppingIngredient[]>();
 
-  public ingredientSelected = new EventEmitter<ShoppingIngredient>();
+  public ingredientSelected = new Subject<ShoppingIngredient>();
 
   private idCounter = 4; // Used as an "auto-increment" id generator
 
@@ -44,7 +45,7 @@ export class ShoppingListService {
     if(-1 !== idx) {
       this.ingredients.splice(idx, 1);
       removed = true;
-      this.ingredientsChanged.emit(this.ingredients.slice());
+      this.ingredientsChanged.next(this.ingredients.slice());
     }
 
     return removed;
@@ -53,7 +54,7 @@ export class ShoppingListService {
   public add(name: string, quantity: string): void {
     const newId = ++this.idCounter;
     this.ingredients.push(new ShoppingIngredient(newId, name, quantity));
-    this.ingredientsChanged.emit(this.ingredients.slice());
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
 
   public update(id: number, name: string, quantity: string): boolean {
@@ -64,7 +65,7 @@ export class ShoppingListService {
       ingr.name = name;
       ingr.quantity = quantity;
       updated = true;
-      this.ingredientsChanged.emit(this.ingredients.slice());
+      this.ingredientsChanged.next(this.ingredients.slice());
     }
 
     return updated;
