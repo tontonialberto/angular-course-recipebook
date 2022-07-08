@@ -27,7 +27,14 @@
             [ngClass]="{'input-invalid': ingrQty.invalid && ingrQty.touched }">
         <span class="help-block input-invalid" *ngIf="ingrQty.invalid && ingrQty.touched">Please specify an integer number.</span>
     </div>
-    <div class="form-group">
-        <button [disabled]="formEdit.invalid" class="btn btn-success btn-block">{{ actionMessage }}</button>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <button type="submit" [disabled]="formEdit.invalid" class="btn btn-success btn-block">{{ actionMessage }}</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-info btn-block" (click)="onClear()">Clear</button>
+        </div>
     </div>
 </form>

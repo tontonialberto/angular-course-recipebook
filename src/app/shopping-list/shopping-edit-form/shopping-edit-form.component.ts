@@ -92,4 +92,8 @@ export class ShoppingEditFormComponent implements OnInit {
       ingredientQuantity: this.ingredient?.quantity
     });
   }
+
+  onClear(): void {
+    this.form.reset();
+  }
 }
