@@ -39,19 +39,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     // Remove from the array the clicked ingredient.
     this.shoppingListService.remove(ingredient.id);
   }
-
-  onSubmit(form: NgForm): void {
-    const ingredient = new Ingredient(
-      form.value.ingredientName,
-      form.value.ingredientQuantity
-    );
-    this.shoppingListService.add(ingredient.name, ingredient.quantity);
-    form.reset({
-      ingredientName: '',
-      ingredientQuantity: 1
-    });
-  }
-
+  
   onEditIngredientClick(ingredient: ShoppingIngredient): void {
     this.shoppingListService.ingredientSelected.next(ingredient);
   }

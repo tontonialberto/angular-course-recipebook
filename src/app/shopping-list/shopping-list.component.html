@@ -2,45 +2,17 @@
     <div class="col-md-12">
         <h2>Shopping List</h2>
     </div>
-</div>
-<!-- INGREDIENT ADD BEGIN -->
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <form #formAdd="ngForm" (ngSubmit)="onSubmit(formAdd)">
-            <div class="form-group">
-                <label for="">Ingredient Name</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    placeholder="Example: Spaghetti De Cecco 500gr"
-                    ngModel
-                    name="ingredientName"
-                    required
-                    #ingrName="ngModel"
-                    [ngClass]="{'input-invalid': ingrName.invalid && ingrName.touched }">
-                <span class="help-block input-invalid" *ngIf="ingrName.invalid && ingrName.touched">Please specify an ingredient!</span>
-            </div>
-            <div class="form-group">
-                <label for="">Quantity</label>
-                <input 
-                    type="number" 
-                    class="form-control" 
-                    placeholder="Example: 12"
-                    ngModel
-                    name="ingredientQuantity"
-                    required
-                    [ngModel]="1"
-                    #ingrQty="ngModel"
-                    [ngClass]="{'input-invalid': ingrQty.invalid && ingrQty.touched }">
-                <span class="help-block input-invalid" *ngIf="ingrQty.invalid && ingrQty.touched">Please specify an integer number.</span>
-            </div>
-            <div class="form-group">
-                <button [disabled]="formAdd.invalid" class="btn btn-success btn-block">Add Ingredient</button>
-            </div>
-        </form>
+    <div class="col-md-12">
+        <button class="btn btn-success" routerLink="/shopping-list">Add</button>
     </div>
 </div>
-<!-- INGREDIENT ADD END -->
+<!-- INGREDIENT ADD/EDIT BEGIN -->
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<!-- INGREDIENT ADD/EDIT END -->
 <hr>
 <!-- INGREDIENT EDIT BEGIN -->
 <app-shopping-edit></app-shopping-edit>
@@ -58,7 +30,7 @@
                 </h3>
             </div>
             <div class="panel-body">
-                <button type="button" class="btn btn-info" (click)="onEditIngredientClick(ingredient)">Edit</button>
+                <button type="button" class="btn btn-info" [routerLink]="['edit', ingredient.id]">Edit</button>
             </div>
         </div>
     </div>
