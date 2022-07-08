@@ -39,8 +39,4 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     // Remove from the array the clicked ingredient.
     this.shoppingListService.remove(ingredient.id);
   }
-  
-  onEditIngredientClick(ingredient: ShoppingIngredient): void {
-    this.shoppingListService.ingredientSelected.next(ingredient);
-  }
 }

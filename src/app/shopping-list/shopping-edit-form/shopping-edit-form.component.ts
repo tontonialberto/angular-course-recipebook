@@ -57,6 +57,7 @@ export class ShoppingEditFormComponent implements OnInit {
     if (this.editMode) {
       const id = this.ingredient.id;
       this.shoppingListService.update(id, newName, newQty);
+      this.router.navigate(['/shopping-list']);
     }
     else {
       this.shoppingListService.add(newName, newQty);
