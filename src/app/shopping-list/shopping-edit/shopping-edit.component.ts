@@ -5,8 +5,7 @@ import { ShoppingIngredient } from '../../_models/shopping-ingredient.model';
 
 @Component({
   selector: 'app-shopping-edit',
-  templateUrl: './shopping-edit.component.html',
-  styleUrls: ['./shopping-edit.component.css']
+  templateUrl: './shopping-edit.component.html'
 })
 export class IngredientEditComponent implements OnInit, OnDestroy {
   
