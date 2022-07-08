@@ -21,6 +21,7 @@
             ngModel
             name="ingredientQuantity"
             required
+            pattern="^\d*$"
             [ngModel]="1"
             #ingrQty="ngModel"
             [ngClass]="{'input-invalid': ingrQty.invalid && ingrQty.touched }">

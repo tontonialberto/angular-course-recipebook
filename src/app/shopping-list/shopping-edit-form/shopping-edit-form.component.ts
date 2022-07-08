@@ -32,11 +32,10 @@ export class ShoppingEditFormComponent implements OnInit {
     this.setIngredientOrRedirect(this.route.snapshot.params);
     this.route.data.subscribe(
       (data: Data) => {
-        this.editMode = data['editMode']
+        this.editMode = data['editMode'];
         this.setActionMessage(this.editMode);
       }
     );
-
   }
 
   ngAfterViewInit(): void {
