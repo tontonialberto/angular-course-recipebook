@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Ingredient } from '../_models/ingredient.model';
 import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 import { ShoppingListService } from '../_services/shopping-list.service';
 
@@ -39,10 +41,16 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.remove(ingredient.id);
   }
 
-  onAddIngredientClick(): void {
-    this.shoppingListService.add(this.newIngredientName, this.newIngredientQuantity);
-    this.newIngredientName = '';
-    this.newIngredientQuantity = '';
+  onSubmit(form: NgForm): void {
+    const ingredient = new Ingredient(
+      form.value.ingredientName,
+      form.value.ingredientQuantity
+    );
+    this.shoppingListService.add(ingredient.name, ingredient.quantity);
+    form.reset({
+      ingredientName: '',
+      ingredientQuantity: 1
+    });
   }
 
   onEditIngredientClick(ingredient: ShoppingIngredient): void {
