@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-error-page',
-  templateUrl: './error-page.component.html',
-  styleUrls: ['./error-page.component.css']
+  templateUrl: './error-page.component.html'
 })
 export class ErrorPageComponent implements OnInit {
 
