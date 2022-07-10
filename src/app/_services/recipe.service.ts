@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
 import { ShoppingListService } from './shopping-list.service';
@@ -8,6 +8,10 @@ import { ShoppingListService } from './shopping-list.service';
   providedIn: 'root'
 })
 export class RecipeService {
+
+  recipesChanged = new Subject<Recipe[]>();
+
+  private idCounter = 2; // Used as an "auto-increment" id generator
 
   private recipes: Recipe[] = [
     new Recipe(0, 'Carbonara Spaghetti', 'A very good dish.',
@@ -42,6 +46,13 @@ export class RecipeService {
     }
 
     return result;
+  }
+
+  public add(name: string, description: string, imagePath: string, ingredients: Ingredient[]): void {
+    const recipe = new Recipe(++this.idCounter, name, 
+      description, imagePath, ingredients);
+    this.recipes.push(recipe);
+    this.recipesChanged.next(this.recipes.slice());
   }
 
   public addToShoppingList(ingredients: Ingredient[]): void {
