@@ -9,6 +9,10 @@
                 <label for="">Description</label>
                 <textarea class="form-control" rows="4" formControlName="description"></textarea>
             </div>
+            <div class="form-group">
+                <label for="">Image URL</label>
+                <input type="text" formControlName="imagePath" class="form-control">
+            </div>
             <div formArrayName="ingredients">
                 <div *ngFor="let ingredient of form.get('ingredients')['controls']; index as i">
                     <div [formGroupName]="i" >
@@ -38,7 +42,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default" [disabled]="form.invalid">
+                <button type="submit" class="btn btn-success" [disabled]="form.invalid">
                     Save
                 </button>
             </div>

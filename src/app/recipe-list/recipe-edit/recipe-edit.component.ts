@@ -36,6 +36,7 @@ export class RecipeEditComponent implements OnInit {
     this.form = new FormGroup({
       'name': new FormControl(this.recipe?.name, [Validators.required]),
       'description': new FormControl(this.recipe?.description),
+      'imagePath': new FormControl(this.recipe?.imagePath),
       'ingredients': new FormArray(
         this.recipe ? 
           this.recipe.ingredients.map(i => new FormGroup({
