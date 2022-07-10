@@ -60,4 +60,17 @@ export class RecipeService {
       this.shoppingListService.add(ingredient.name, ingredient.quantity);
     }
   }
+
+  public update(recipe: Recipe): boolean {
+    const idx = this.recipes.findIndex(r => r.id === recipe.id);
+    let result: boolean = false;
+
+    if(-1 !== idx) {
+      this.recipes[idx] = recipe;
+      this.recipesChanged.next(this.recipes.slice());
+      result = true;
+    }
+
+    return result;
+  }
 }
