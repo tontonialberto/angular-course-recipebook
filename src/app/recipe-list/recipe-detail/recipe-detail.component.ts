@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Ingredient } from 'src/app/_models/ingredient.model';
 import { RecipeService } from 'src/app/_services/recipe.service';
 import { Recipe } from '../../_models/recipe.model';
@@ -16,7 +16,10 @@ export class RecipeDetailComponent implements OnInit {
   // Used to show a success message in the UI.
   addedToShoppingList: boolean = false;
 
-  constructor(private recipeService: RecipeService, private route: ActivatedRoute) { }
+  constructor(
+    private recipeService: RecipeService, 
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.recipe = this.route.snapshot.data['recipe'];
@@ -34,5 +37,11 @@ export class RecipeDetailComponent implements OnInit {
     setTimeout(() => {
       this.addedToShoppingList = false;
     }, 5000);
+  }
+
+  onDelete(): void {
+    if(this.recipeService.remove(this.recipe.id)) {
+      this.router.navigate(['/recipes']);
+    }
   }
 }

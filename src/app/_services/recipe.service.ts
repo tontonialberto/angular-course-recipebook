@@ -73,4 +73,17 @@ export class RecipeService {
 
     return result;
   }
+
+  public remove(id: number): boolean {
+    const idx = this.recipes.findIndex(r => id === r.id);
+    let result: boolean = false;
+
+    if(-1 !== idx) {
+      this.recipes.splice(idx, 1);
+      this.recipesChanged.next(this.recipes.slice());
+      result = true;
+    }
+
+    return result;
+  }
 }
