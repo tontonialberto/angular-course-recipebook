@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, Data, Params, Router } from '@angular/router';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { ActivatedRoute, Data, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ShoppingIngredient } from 'src/app/_models/shopping-ingredient.model';
 import { ShoppingListService } from 'src/app/_services/shopping-list.service';
 
