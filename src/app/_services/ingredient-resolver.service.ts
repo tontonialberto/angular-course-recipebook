@@ -11,7 +11,14 @@ export class IngredientResolver implements Resolve<ShoppingIngredient> {
 
   constructor(private shoppingListService: ShoppingListService, private router: Router) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): ShoppingIngredient | Observable<ShoppingIngredient> | Promise<ShoppingIngredient> {
+  resolve(
+      route: ActivatedRouteSnapshot, 
+      state: RouterStateSnapshot)
+      : ShoppingIngredient | 
+        Observable<ShoppingIngredient> | 
+        Promise<ShoppingIngredient> {
+
+    console.log('resolver')
     const id = +route.params['id'];
     const ingredient = this.shoppingListService.getById(id);
 

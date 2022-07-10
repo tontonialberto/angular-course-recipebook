@@ -6,13 +6,24 @@ import { RecipeEditComponent } from './recipe-list/recipe-edit/recipe-edit.compo
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { ShoppingEditFormComponent } from './shopping-list/shopping-edit-form/shopping-edit-form.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
+import { IngredientResolver } from './_services/ingredient-resolver.service';
 import { RecipeResolver } from './_services/recipe-resolver.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/shopping-list', pathMatch: 'full' },
   { path: 'shopping-list', component: ShoppingListComponent, children: [
-    { path: '', component: ShoppingEditFormComponent, data: { editMode: false } },
-    { path: 'edit/:id', component: ShoppingEditFormComponent, data: { editMode: true } }
+    { 
+      path: 'edit/:id', 
+      component: ShoppingEditFormComponent, 
+      data: { editMode: true }, 
+      resolve: { ingredient: IngredientResolver},
+      runGuardsAndResolvers: 'always'
+    },
+    { 
+      path: '', 
+      component: ShoppingEditFormComponent, 
+      data: { editMode: false, ingredient: null }
+    },
   ] },
   { path: 'recipes', component: RecipeListComponent, children: [
     { path: '', component: ErrorPageComponent, data: { message: 'Please select a recipe!' }},

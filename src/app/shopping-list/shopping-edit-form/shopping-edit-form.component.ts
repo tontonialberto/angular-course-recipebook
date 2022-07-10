@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
-import { Ingredient } from 'src/app/_models/ingredient.model';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ShoppingIngredient } from 'src/app/_models/shopping-ingredient.model';
 import { ShoppingListService } from 'src/app/_services/shopping-list.service';
 
@@ -13,7 +13,7 @@ const MESSAGE_CREATE: string = 'Add Ingredient';
   selector: 'app-shopping-edit-form',
   templateUrl: './shopping-edit-form.component.html'
 })
-export class ShoppingEditFormComponent implements OnInit {
+export class ShoppingEditFormComponent implements OnInit, AfterViewInit {
 
   // If false, mode is "create new ingredient"
   editMode: boolean = false;
@@ -21,33 +21,34 @@ export class ShoppingEditFormComponent implements OnInit {
   // Used as input.
   ingredient: ShoppingIngredient = null;
 
+  private ingredientSelected = new BehaviorSubject<void>(void(0));
+
   actionMessage: string = null;
 
-  @ViewChild('formEdit') form: NgForm;
+  @ViewChild('formEdit', { static: true }) form: NgForm;
 
   constructor(private shoppingListService: ShoppingListService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.editMode = this.route.snapshot.data['editMode'];
-    this.setIngredientOrRedirect(this.route.snapshot.params);
+    this.ingredient = this.route.snapshot.data['ingredient'];
+    this.ingredientSelected.next();
     this.route.data.subscribe(
       (data: Data) => {
         this.editMode = data['editMode'];
         this.setActionMessage(this.editMode);
+        this.ingredient = data['ingredient'];
+        this.ingredientSelected.next();
       }
     );
   }
 
   ngAfterViewInit(): void {
-    // setTimeout() is used to wait next tick in order to have a correctly initialized NgForm.
-    setTimeout(() => {
-      this.route.params.subscribe((params: Params) => {
-        if (this.editMode) {
-          this.setIngredientOrRedirect(params);
-          this.initFormInEditMode();
-        }
-      });
-    }, 0)
+    this.ingredientSelected.subscribe(
+      () => {
+        setTimeout(() => this.fillFormWithIngredient(), 0);
+      }
+    )
   }
 
   onSubmit(form: NgForm): void {
@@ -67,17 +68,9 @@ export class ShoppingEditFormComponent implements OnInit {
       });
     }
   }
-  
-  setIngredientOrRedirect(params: Params): void {
-    this.ingredient = this.shoppingListService.getById(+params['id']);
-
-    if (null === this.ingredient) {
-      this.router.navigate(['/shopping-list']);
-    }
-  }
 
   setActionMessage(edit: boolean): void {
-    if (this.editMode) {
+    if (edit) {
       this.actionMessage = MESSAGE_UPDATE;
     }
     else {
@@ -86,7 +79,8 @@ export class ShoppingEditFormComponent implements OnInit {
   }
 
   // Used to fill form controls with existing ingredient data.
-  initFormInEditMode(): void {
+  fillFormWithIngredient(): void {
+    console.log(this.form);
     this.form.reset({
       ingredientName: this.ingredient?.name,
       ingredientQuantity: this.ingredient?.quantity
