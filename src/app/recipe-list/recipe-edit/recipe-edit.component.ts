@@ -77,4 +77,20 @@ export class RecipeEditComponent implements OnInit {
   onDeleteIngredient(idx: number): void {
     (this.form.get('ingredients') as FormArray).removeAt(idx);
   }
+
+  get ctlName(): FormControl {
+    return this.form.get('name') as FormControl;
+  }
+
+  private ctlIngredient(id:number): FormGroup {
+    return (this.form.get('ingredients') as FormArray).at(id) as FormGroup;
+  }
+
+  ctlIngrName(id: number): FormControl {
+    return this.ctlIngredient(id).get('name') as FormControl;
+  }
+
+  ctlIngrQuantity(id: number): FormControl {
+    return this.ctlIngredient(id).get('quantity') as FormControl;
+  }
 }
