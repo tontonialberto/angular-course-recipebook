@@ -13,10 +13,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ingredients: ShoppingIngredient[] = [];
 
-  newIngredientName: string = '';
-
-  newIngredientQuantity: string = '';
-
   private subscription: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) { }
