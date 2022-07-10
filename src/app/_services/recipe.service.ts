@@ -48,11 +48,12 @@ export class RecipeService {
     return result;
   }
 
-  public add(name: string, description: string, imagePath: string, ingredients: Ingredient[]): void {
+  public add(name: string, description: string, imagePath: string, ingredients: Ingredient[]): number {
     const recipe = new Recipe(++this.idCounter, name, 
       description, imagePath, ingredients);
     this.recipes.push(recipe);
     this.recipesChanged.next(this.recipes.slice());
+    return this.idCounter;
   }
 
   public addToShoppingList(ingredients: Ingredient[]): void {
