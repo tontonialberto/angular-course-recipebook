@@ -60,7 +60,7 @@ export class ShoppingEditFormComponent implements OnInit, AfterViewInit, OnDestr
 
   onSubmit(form: NgForm): void {
     const newName: string = form.value.ingredientName;
-    const newQty: string = form.value.ingredientQuantity;
+    const newQty: number = +form.value.ingredientQuantity;
 
     if (this.editMode) {
       const id = this.ingredient.id;

@@ -16,11 +16,11 @@ export class ShoppingListService {
   private idCounter = 4; // Used as an "auto-increment" id generator
 
   private ingredients: ShoppingIngredient[] = [
-    new ShoppingIngredient(0, 'Carrots', '1kg'),
-    new ShoppingIngredient(1, 'Tomatoes', '1kg'),
-    new ShoppingIngredient(2, 'Onions', '2'),
+    new ShoppingIngredient(0, 'Carrots [kg]', 1),
+    new ShoppingIngredient(1, 'Tomatoes [kg]', 1),
+    new ShoppingIngredient(2, 'Onions', 2),
     new ShoppingIngredient(3, 'Nutella', null),
-    new ShoppingIngredient(4, 'Frozen chicken', '2 bags'),
+    new ShoppingIngredient(4, 'Frozen chicken [bags]', 2),
   ];
 
   constructor() { }
@@ -53,13 +53,13 @@ export class ShoppingListService {
     return removed;
   }
 
-  public add(name: string, quantity: string): void {
+  public add(name: string, quantity: number): void {
     const newId = ++this.idCounter;
     this.ingredients.push(new ShoppingIngredient(newId, name, quantity));
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
-  public update(id: number, name: string, quantity: string): boolean {
+  public update(id: number, name: string, quantity: number): boolean {
     const ingr = this.ingredients.find(ingredient => id === ingredient.id);
     let updated = false;
 
