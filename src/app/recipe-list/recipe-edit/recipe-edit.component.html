@@ -23,14 +23,18 @@
                                     <input type="number" formControlName="quantity" class="form-control">
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-danger" (click)="onDeleteIngredient(i)">
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-default">Add Ingredient</button>
+                    <button type="button" class="btn btn-default" (click)="onAddIngredient()">
+                        Add Ingredient
+                    </button>
                 </div>
             </div>
             <div class="form-group">

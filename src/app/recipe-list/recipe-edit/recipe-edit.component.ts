@@ -29,7 +29,6 @@ export class RecipeEditComponent implements OnInit {
         }
         else {
           this.editMode = false;
-          console.log('Create mode');
         }
       }
     )
@@ -50,5 +49,18 @@ export class RecipeEditComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.form);
+  }
+
+  onAddIngredient(): void {
+    (this.form.get('ingredients') as FormArray).push(
+      new FormGroup({
+        'name': new FormControl('', Validators.required),
+        'quantity': new FormControl(1, [Validators.required, Validators.pattern('\\d*')])
+      })
+    );
+  }
+
+  onDeleteIngredient(idx: number): void {
+    (this.form.get('ingredients') as FormArray).removeAt(idx);
   }
 }
