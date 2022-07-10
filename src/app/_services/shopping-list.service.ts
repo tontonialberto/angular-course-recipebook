@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 
 @Injectable({
@@ -7,9 +7,11 @@ import { ShoppingIngredient } from '../_models/shopping-ingredient.model';
 })
 export class ShoppingListService {
 
+  // Emits when a method such as update, remove... gets called
   public ingredientsChanged = new Subject<ShoppingIngredient[]>();
 
-  public ingredientSelected = new Subject<ShoppingIngredient>();
+  // Emitted from the outside of the service
+  public ingredientSelected = new BehaviorSubject<ShoppingIngredient>(null);
 
   private idCounter = 4; // Used as an "auto-increment" id generator
 
