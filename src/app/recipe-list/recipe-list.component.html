@@ -8,7 +8,7 @@
             </div>
             <!-- RECIPE LIST ITEM BEGIN -->
             <div *ngFor="let recipe of recipes" class="col-md-12 media">
-                <div class="col-md-12">
+                <div class="col-md-12" class="item">
                     <h4>
                         <a [routerLink]="['/recipes', recipe.id]" routerLinkActive="active-item">
                             {{ recipe.name }}

@@ -1,3 +1,17 @@
 a.active-item {
     font-weight: bold;
 }
+
+div.item {
+    border: 1px solid rgba(150, 150, 150);
+    border-radius: 10px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-left: 20px;
+    box-shadow: 5px 5px 10px 0 rgb(153, 153, 153);
+    margin-bottom: 20px;
+}
+
+div.active-item {
+    color: white;
+}
