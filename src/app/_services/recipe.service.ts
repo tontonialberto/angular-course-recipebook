@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { concat, forkJoin, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
@@ -16,6 +16,10 @@ export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [];
+
+  // This will be store the id of the recipes that have been
+  // locally deleted.
+  private toBeDeleted: string[] = [];
 
   constructor(private shoppingListService: ShoppingListService,
     private http: HttpClient) {
@@ -128,6 +132,8 @@ export class RecipeService {
     let result: boolean = false;
 
     if (-1 !== idx) {
+      this.toBeDeleted.push(this.recipes[idx].id);
+      console.log(this.toBeDeleted)
       this.recipes.splice(idx, 1);
       this.recipesChanged.next(this.recipes.slice());
       result = true;
@@ -137,7 +143,7 @@ export class RecipeService {
   }
 
   // Store the local recipe list on the server.
-  public saveAll(): Observable<boolean> {
+  public saveAll(): void {
     let recipesObj: { [id: string]: { name, description, imagePath, ingredients } } = {};
     this.recipes.map((r: Recipe) => {
       recipesObj[r.id] = {
@@ -147,12 +153,19 @@ export class RecipeService {
         ingredients: r.ingredients
       }
     });
-    return this.http.patch(API_URL + 'recipes.json',
-      {
-        ...recipesObj
-      }
-    ).pipe(
-      map(() => true)
-    )
-  };
+
+    const updateRecipes: Observable<boolean> = this.http.patch(API_URL + 'recipes.json', { ...recipesObj })
+      .pipe(map(() => true));
+    
+    const deleteRecipes: Observable<boolean>[] = this.toBeDeleted.map(
+      (id: string) => this.http.delete(API_URL + `recipes/${id}.json`).pipe(map(() => true))
+    );
+
+    forkJoin([updateRecipes].concat(deleteRecipes))
+    .subscribe(
+      () => {},
+      () => {},
+      () => this.toBeDeleted = []
+    );
+  }
 }

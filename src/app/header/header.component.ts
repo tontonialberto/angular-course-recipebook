@@ -22,11 +22,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onSaveData(): void {
-    this.recipeService.saveAll().subscribe(
-      (success: boolean) => {
-        // Nothing to do.
-      }
-    )
+    this.recipeService.saveAll();
   }
 
   onFetchData(): void {
