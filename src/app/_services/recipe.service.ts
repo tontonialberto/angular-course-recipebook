@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { map, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
 import { ShoppingListService } from './shopping-list.service';
@@ -20,8 +21,8 @@ export class RecipeService {
 
   constructor(private shoppingListService: ShoppingListService,
     private http: HttpClient) {
-      this.fetchAll();
-    }
+    this.fetchAll();
+  }
 
   /**
    * Get all the recipes from the backend 
@@ -37,13 +38,14 @@ export class RecipeService {
           else {
             return Object.keys(res).map(
               (key: string) => {
-                return { ...res[key] }
+                return Recipe.fromRaw({ ...res[key], id: key });
               }
             );
           }
         })
       ).subscribe((recipes: Recipe[]) => {
         this.recipes = recipes;
+        console.log(recipes)
         this.recipesChanged.next(this.recipes.slice());
       });
   }
@@ -55,7 +57,7 @@ export class RecipeService {
     return this.recipes.slice();
   }
 
-  public getById(id: number): Recipe {
+  public getById(id: string): Recipe {
     let result = this.recipes.find((r: Recipe) => id === r.id);
 
     if (undefined === result) {
@@ -65,12 +67,27 @@ export class RecipeService {
     return result;
   }
 
-  public add(name: string, description: string, imagePath: string, ingredients: Ingredient[]): number {
-    const recipe = new Recipe(++this.idCounter, name,
-      description, imagePath, ingredients);
-    this.recipes.push(recipe);
-    this.recipesChanged.next(this.recipes.slice());
-    return this.idCounter;
+  public add(
+    name: string,
+    description: string,
+    imagePath: string,
+    ingredients: Ingredient[]): Observable<string> {
+
+    return this.http.post(API_URL + 'recipes.json',
+      {
+        name: name,
+        description: description,
+        imagePath: imagePath,
+        ingredients: ingredients
+      }
+    ).pipe(
+      map((res: { name: string }) => res.name),
+      tap((newId: string) => {
+        const recipe = new Recipe(newId, name, description, imagePath, ingredients);
+        this.recipes.push(recipe);
+        this.recipesChanged.next(this.recipes.slice());
+      })
+    );
   }
 
   public addToShoppingList(ingredients: Ingredient[]): void {
@@ -92,7 +109,7 @@ export class RecipeService {
     return result;
   }
 
-  public remove(id: number): boolean {
+  public remove(id: string): boolean {
     const idx = this.recipes.findIndex(r => id === r.id);
     let result: boolean = false;
 

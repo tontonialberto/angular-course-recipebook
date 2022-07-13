@@ -12,7 +12,7 @@ export class RecipeResolver implements Resolve<Recipe> {
   constructor(private recipeService: RecipeService, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe | Observable<Recipe> | Promise<Recipe> {
-    const id: number = +route.params['id'];
+    const id: string = route.params['id'];
     const recipe: Recipe = this.recipeService.getById(id);
     
     // If no such recipe with that id, navigate to recipes section.

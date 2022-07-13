@@ -28,7 +28,7 @@ export class RecipeEditComponent implements OnInit {
       (params: Params) => {
         if(params['id']) {
           this.editMode = true;
-          this.recipe = this.recipeService.getById(+params['id']);
+          this.recipe = this.recipeService.getById(params['id']);
         }
         else {
           this.editMode = false;
@@ -53,18 +53,20 @@ export class RecipeEditComponent implements OnInit {
 
   onSubmit(): void {
     const { name, description, imagePath, ingredients } = this.form.value;
-    let id: number = null;
+    let id: string = null;
 
     if(this.editMode) {
       id = this.recipe.id;
       const recipe = new Recipe(id, name, description, imagePath, ingredients);
       this.recipeService.update(recipe);
+      this.router.navigate(['/recipes', id]);
     }
     else {
-      id = this.recipeService.add(name, description, imagePath, ingredients);
+      this.recipeService.add(name, description, imagePath, ingredients)
+        .subscribe((id: string) => {
+          this.router.navigate(['/recipes', id]);
+        });
     }
-
-    this.router.navigate(['/recipes', id]);
   }
 
   onAddIngredient(): void {
