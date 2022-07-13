@@ -58,8 +58,11 @@ export class RecipeEditComponent implements OnInit {
     if(this.editMode) {
       id = this.recipe.id;
       const recipe = new Recipe(id, name, description, imagePath, ingredients);
-      this.recipeService.update(recipe);
-      this.router.navigate(['/recipes', id]);
+      this.recipeService.update(recipe)
+        .subscribe((success: boolean) => {
+          if(success)
+            this.router.navigate(['/recipes', id]);
+        });
     }
     else {
       this.recipeService.add(name, description, imagePath, ingredients)

@@ -45,7 +45,6 @@ export class RecipeService {
         })
       ).subscribe((recipes: Recipe[]) => {
         this.recipes = recipes;
-        console.log(recipes)
         this.recipesChanged.next(this.recipes.slice());
       });
   }
@@ -96,14 +95,31 @@ export class RecipeService {
     }
   }
 
-  public update(recipe: Recipe): boolean {
+  public update(recipe: Recipe): Observable<boolean> {
     const idx = this.recipes.findIndex(r => r.id === recipe.id);
-    let result: boolean = false;
+    let result: Observable<boolean> = null;
 
-    if (-1 !== idx) {
-      this.recipes[idx] = recipe;
-      this.recipesChanged.next(this.recipes.slice());
-      result = true;
+    if (-1 === idx) {
+      result = new Observable<boolean>((subscriber) => {
+        subscriber.next(false);
+      });
+    }
+    else {
+      const endpoint = API_URL + `recipes/${recipe.id}.json`;
+      result = this.http.patch(endpoint,
+        {
+          name: recipe.name,
+          description: recipe.description,
+          imagePath: recipe.imagePath,
+          ingredients: recipe.ingredients
+        }
+      ).pipe(
+        map(() => true),
+        tap(() => {
+          this.recipes[idx] = recipe;
+          this.recipesChanged.next(this.recipes.slice());
+        })
+      );
     }
 
     return result;
