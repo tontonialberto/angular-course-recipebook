@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { RecipeService } from '../_services/recipe.service';
 
 @Component({
   selector: 'app-header',
@@ -11,12 +12,20 @@ export class HeaderComponent implements OnInit {
 
   openDropdown: boolean = false;
 
-  constructor() { }
+  constructor(private recipeService: RecipeService) { }
 
   ngOnInit(): void {
   }
 
   toggleNavigation(): void {
     this.showLinks = !this.showLinks;
+  }
+
+  onSaveData(): void {
+    this.recipeService.saveAll().subscribe(
+      (success: boolean) => {
+        // Nothing to do.
+      }
+    )
   }
 }

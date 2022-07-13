@@ -15,8 +15,6 @@ export class RecipeService {
 
   recipesChanged = new Subject<Recipe[]>();
 
-  private idCounter = 2; // Used as an "auto-increment" id generator
-
   private recipes: Recipe[] = [];
 
   constructor(private shoppingListService: ShoppingListService,
@@ -137,4 +135,24 @@ export class RecipeService {
 
     return result;
   }
+
+  // Store the local recipe list on the server.
+  public saveAll(): Observable<boolean> {
+    let recipesObj: { [id: string]: { name, description, imagePath, ingredients } } = {};
+    this.recipes.map((r: Recipe) => {
+      recipesObj[r.id] = {
+        name: r.name,
+        description: r.description,
+        imagePath: r.imagePath,
+        ingredients: r.ingredients
+      }
+    });
+    return this.http.patch(API_URL + 'recipes.json',
+      {
+        ...recipesObj
+      }
+    ).pipe(
+      map(() => true)
+    )
+  };
 }
