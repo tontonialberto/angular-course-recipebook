@@ -1,8 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { map, Subject } from 'rxjs';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
 import { ShoppingListService } from './shopping-list.service';
+
+const API_URL = 'https://food-fa34d-default-rtdb.europe-west1.firebasedatabase.app/';
 
 @Injectable({
   providedIn: 'root'
@@ -13,35 +16,49 @@ export class RecipeService {
 
   private idCounter = 2; // Used as an "auto-increment" id generator
 
-  private recipes: Recipe[] = [
-    new Recipe(0, 'Carbonara Spaghetti', 'A very good dish.',
-      'https://www.tavolartegusto.it/wp/wp-content/uploads/2020/03/Carbonara-Spaghetti-alla-carbonara-Ricetta-Carbonara.jpg',
-      [
-        new Ingredient('Spaghetti [gr]', 200),
-        new Ingredient('Guanciale [gr]', 100),
-        new Ingredient('Eggs', 3)
-      ]
-    ),
-    new Recipe(1, 'Margherita Pizza', 'The best pizza evah.',
-      'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/5802fab5-fdce-468a-a830-43e8001f5a72/Derivates/c00dc34a-e73d-42f0-a86e-e2fd967d33fe.jpg',
-      [
-        new Ingredient('Flour [kg]', 1),
-        new Ingredient('Tomato sauce [gr]', 200),
-        new Ingredient('Mozzarella [gr]', 100)
-      ]
-    )
-  ]
+  private recipes: Recipe[] = [];
 
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService,
+    private http: HttpClient) {
+      this.fetchAll();
+    }
 
+  /**
+   * Get all the recipes from the backend 
+   * and store a local copy.
+   */
+  public fetchAll(): void {
+    this.http.get(API_URL + 'recipes.json')
+      .pipe(
+        map((res: { [key: string]: Recipe }) => {
+          if (null === res) {
+            return [];
+          }
+          else {
+            return Object.keys(res).map(
+              (key: string) => {
+                return { ...res[key] }
+              }
+            );
+          }
+        })
+      ).subscribe((recipes: Recipe[]) => {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+      });
+  }
+
+  /**
+   * Note: returns the previously fetched local copy.
+   */
   public getAll(): Recipe[] {
     return this.recipes.slice();
   }
 
   public getById(id: number): Recipe {
     let result = this.recipes.find((r: Recipe) => id === r.id);
-    
-    if(undefined === result) {
+
+    if (undefined === result) {
       result = null;
     }
 
@@ -49,7 +66,7 @@ export class RecipeService {
   }
 
   public add(name: string, description: string, imagePath: string, ingredients: Ingredient[]): number {
-    const recipe = new Recipe(++this.idCounter, name, 
+    const recipe = new Recipe(++this.idCounter, name,
       description, imagePath, ingredients);
     this.recipes.push(recipe);
     this.recipesChanged.next(this.recipes.slice());
@@ -57,7 +74,7 @@ export class RecipeService {
   }
 
   public addToShoppingList(ingredients: Ingredient[]): void {
-    for(const ingredient of ingredients) {
+    for (const ingredient of ingredients) {
       this.shoppingListService.add(ingredient.name, ingredient.quantity);
     }
   }
@@ -66,7 +83,7 @@ export class RecipeService {
     const idx = this.recipes.findIndex(r => r.id === recipe.id);
     let result: boolean = false;
 
-    if(-1 !== idx) {
+    if (-1 !== idx) {
       this.recipes[idx] = recipe;
       this.recipesChanged.next(this.recipes.slice());
       result = true;
@@ -79,7 +96,7 @@ export class RecipeService {
     const idx = this.recipes.findIndex(r => id === r.id);
     let result: boolean = false;
 
-    if(-1 !== idx) {
+    if (-1 !== idx) {
       this.recipes.splice(idx, 1);
       this.recipesChanged.next(this.recipes.slice());
       result = true;
