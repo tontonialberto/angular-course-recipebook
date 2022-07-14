@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 const API_KEY = 'AIzaSyD7MT-aEUFT_hRdQ0DwbLDQOyt81ez9tN0';
 
@@ -28,6 +28,9 @@ export class AuthService {
     ).pipe(
       map((res: FirebaseAuthResponse) => {
         return res.idToken ? res.idToken : null;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        return throwError(() => err.error.error.message);
       })
     )
   }
