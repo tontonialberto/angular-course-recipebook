@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthComponent } from './auth/auth.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RecipeDetailComponent } from './recipe-list/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-list/recipe-edit/recipe-edit.component';
@@ -31,6 +32,7 @@ const routes: Routes = [
     { path: ':id', component: RecipeDetailComponent, resolve: { recipe: RecipeResolver } },
     { path: ':id/edit', component: RecipeEditComponent, resolve: { recipe: RecipeResolver } }
   ] },
+  { path: 'auth', component: AuthComponent },
   { path: '**', component: ErrorPageComponent, data: { message: 'Oops.. this page does not exist!' } }
 ];
 
