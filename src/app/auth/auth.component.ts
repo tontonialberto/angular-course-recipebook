@@ -19,6 +19,8 @@ export class AuthComponent implements OnInit {
 
   isLoading: boolean = false;
 
+  successMessage: string = null;
+
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -47,12 +49,13 @@ export class AuthComponent implements OnInit {
         .subscribe({
           next: (token: string) => {
             if(token) {
-              alert('Sign Up Success!');
               this.errorMessage = null;
+              this.successMessage = `${email} has been registered successfully!`;
             }
           },
           error: (error: string) => {
             this.errorMessage = this.getSignupErrorMessage(error);
+            this.successMessage = null;
           }
         });
     }
