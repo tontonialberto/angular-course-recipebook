@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscriber } from 'rxjs';
+import { finalize, Subscriber } from 'rxjs';
 import { AuthService } from '../_services/auth.service';
 
 @Component({
@@ -17,6 +17,8 @@ export class AuthComponent implements OnInit {
 
   errorMessage: string = null;
 
+  isLoading: boolean = false;
+
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -30,8 +32,18 @@ export class AuthComponent implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
 
-    if(!this.loginMode) {
+    this.isLoading = true;
+
+    if(this.loginMode) {
+      // Call authService.login
+    }
+    else {
       this.authService.signup(email, password)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
         .subscribe({
           next: (token: string) => {
             if(token) {

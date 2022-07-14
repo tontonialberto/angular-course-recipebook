@@ -14,6 +14,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { RecipeEditComponent } from './recipe-list/recipe-edit/recipe-edit.component';
 import { ShoppingEditFormComponent } from './shopping-list/shopping-edit-form/shopping-edit-form.component';
 import { AuthComponent } from './auth/auth.component';
+import { SpinnerComponent } from './_shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AuthComponent } from './auth/auth.component';
     ErrorPageComponent,
     RecipeEditComponent,
     ShoppingEditFormComponent,
-    AuthComponent
+    AuthComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
