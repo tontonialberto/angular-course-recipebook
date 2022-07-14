@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 
@@ -19,19 +19,31 @@ export class AuthService {
 
   public signup(email: string, password: string): Observable<string> {
     const apiUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp';
-    return this.http.post(apiUrl + `?key=${API_KEY}`, 
+    return this.authenticate(email, password, apiUrl);
+  }
+
+  public login(email: string, password: string): Observable<string> {
+    const apiUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword';
+    return this.authenticate(email, password, apiUrl);
+  }
+
+  public authenticate(email: string, password: string, apiUrl: string): Observable<string> {
+    return this.http.post(apiUrl,
       {
         email: email,
         password: password,
         returnSecureToken: true
+      },
+      {
+        params: new HttpParams().set('key', API_KEY)
       }
     ).pipe(
       map((res: FirebaseAuthResponse) => {
         return res.idToken ? res.idToken : null;
       }),
       catchError((err: HttpErrorResponse) => {
-        return throwError(() => err.error.error.message);
+        return throwError(() => err.error?.error?.message);
       })
-    )
+    );
   }
 }

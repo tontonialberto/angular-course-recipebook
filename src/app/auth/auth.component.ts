@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { finalize, Subscriber } from 'rxjs';
+import { finalize, Observable, Subscriber } from 'rxjs';
 import { AuthService } from '../_services/auth.service';
 
 @Component({
@@ -36,29 +36,36 @@ export class AuthComponent implements OnInit {
 
     this.isLoading = true;
 
+    let authCall, getErrorMessage, successMessage;
     if(this.loginMode) {
-      // Call authService.login
+      authCall = this.authService.login.bind(this.authService);
+      getErrorMessage = this.getLoginErrorMessage;
+      successMessage = `Hello, ${email}!`;
     }
     else {
-      this.authService.signup(email, password)
-        .pipe(
-          finalize(() => {
-            this.isLoading = false;
-          })
-        )
-        .subscribe({
-          next: (token: string) => {
-            if(token) {
-              this.errorMessage = null;
-              this.successMessage = `${email} has been registered successfully!`;
-            }
-          },
-          error: (error: string) => {
-            this.errorMessage = this.getSignupErrorMessage(error);
-            this.successMessage = null;
-          }
-        });
+      authCall = this.authService.signup.bind(this.authService);
+      getErrorMessage = this.getSignupErrorMessage;
+      successMessage = `${email} has been registered successfully!`;
     }
+
+    authCall(email, password)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (token: string) => {
+          if(token) {
+            this.errorMessage = null;
+            this.successMessage = successMessage;
+          }
+        },
+        error: (error: string) => {
+          this.errorMessage = getErrorMessage(error);
+          this.successMessage = null;
+        }
+      });
   }
 
   private getSignupErrorMessage(error: string): string {
@@ -68,7 +75,18 @@ export class AuthComponent implements OnInit {
       case 'EMAIL_EXISTS':
         return 'There is already a user with the given email!';
       default:
-        return '';
+        return error;
+    }
+  }
+
+  private getLoginErrorMessage(error: string): string {
+    switch(error) {
+      case 'EMAIL_NOT_FOUND':
+        return 'Could not find a user with the given email!';
+      case 'INVALID_PASSWORD':
+        return 'The password is wrong!'
+      default:
+        return error;
     }
   }
 }

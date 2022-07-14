@@ -3,15 +3,15 @@
         <div class="alert alert-danger" *ngIf="errorMessage && !isLoading">
             <span>{{ errorMessage }}</span>
         </div>
-        <div *ngIf="isLoading">
-            <app-spinner></app-spinner>
-        </div>
         <div class="alert alert-success" *ngIf="successMessage && !isLoading">
             <span>{{ successMessage }}</span>
         </div>
+        <div *ngIf="isLoading">
+            <app-spinner></app-spinner>
+        </div>
         <form #form="ngForm" (ngSubmit)="onSubmit(form)">
             <div class="form-group">
-                <label for="username">Username</label>
+                <label for="email">Email</label>
                 <input
                   type="text"
                   id="email"
