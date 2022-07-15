@@ -1,9 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { concat, forkJoin, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { map, mergeMap, take, tap } from 'rxjs/operators';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
+import { User } from '../_models/user.model';
+import { AuthService } from './auth.service';
 import { ShoppingListService } from './shopping-list.service';
 
 const API_URL = 'https://food-fa34d-default-rtdb.europe-west1.firebasedatabase.app/';
@@ -22,7 +24,8 @@ export class RecipeService {
   private toBeDeleted: string[] = [];
 
   constructor(private shoppingListService: ShoppingListService,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private authService: AuthService) {
     this.fetchAll();
   }
 
@@ -31,24 +34,29 @@ export class RecipeService {
    * and store a local copy.
    */
   public fetchAll(): void {
-    this.http.get(API_URL + 'recipes.json')
-      .pipe(
-        map((res: { [key: string]: Recipe }) => {
-          if (null === res) {
-            return [];
-          }
-          else {
-            return Object.keys(res).map(
-              (key: string) => {
-                return Recipe.fromRaw({ ...res[key], id: key });
-              }
-            );
-          }
-        })
-      ).subscribe((recipes: Recipe[]) => {
-        this.recipes = recipes;
-        this.recipesChanged.next(this.recipes.slice());
-      });
+    this.getUserToken().pipe(
+      mergeMap((token: string) => {
+        return this.http.get(API_URL + 'recipes.json',
+          {
+            params: new HttpParams().set('auth', token)
+          })
+      }),
+      map((res: { [key: string]: Recipe }) => {
+        if (null === res) {
+          return [];
+        }
+        else {
+          return Object.keys(res).map(
+            (key: string) => {
+              return Recipe.fromRaw({ ...res[key], id: key });
+            }
+          );
+        }
+      })
+    ).subscribe((recipes: Recipe[]) => {
+      this.recipes = recipes;
+      this.recipesChanged.next(this.recipes.slice());
+    });
   }
 
   /**
@@ -74,14 +82,18 @@ export class RecipeService {
     imagePath: string,
     ingredients: Ingredient[]): Observable<string> {
 
-    return this.http.post(API_URL + 'recipes.json',
-      {
-        name: name,
-        description: description,
-        imagePath: imagePath,
-        ingredients: ingredients
-      }
-    ).pipe(
+    return this.getUserToken().pipe(
+      mergeMap((token: string) => {
+        return this.http.post(API_URL + 'recipes.json',
+          {
+            name: name,
+            description: description,
+            imagePath: imagePath,
+            ingredients: ingredients
+          },
+          { params: new HttpParams().set('auth', token) }
+        );
+      }),
       map((res: { name: string }) => res.name),
       tap((newId: string) => {
         const recipe = new Recipe(newId, name, description, imagePath, ingredients);
@@ -102,20 +114,24 @@ export class RecipeService {
     let result: Observable<boolean> = null;
 
     if (-1 === idx) {
-      result = new Observable<boolean>((subscriber) => {
-        subscriber.next(false);
-      });
+      result = of(false);
     }
     else {
-      const endpoint = API_URL + `recipes/${recipe.id}.json`;
-      result = this.http.patch(endpoint,
-        {
-          name: recipe.name,
-          description: recipe.description,
-          imagePath: recipe.imagePath,
-          ingredients: recipe.ingredients
-        }
-      ).pipe(
+      result = this.getUserToken().pipe(
+        mergeMap((token: string) => {
+          const endpoint = API_URL + `recipes/${recipe.id}.json`;
+          return this.http.patch(endpoint,
+            {
+              name: recipe.name,
+              description: recipe.description,
+              imagePath: recipe.imagePath,
+              ingredients: recipe.ingredients
+            },
+            {
+              params: new HttpParams().set('auth', token)
+            }
+          );
+        }),
         map(() => true),
         tap(() => {
           this.recipes[idx] = recipe;
@@ -133,7 +149,6 @@ export class RecipeService {
 
     if (-1 !== idx) {
       this.toBeDeleted.push(this.recipes[idx].id);
-      console.log(this.toBeDeleted)
       this.recipes.splice(idx, 1);
       this.recipesChanged.next(this.recipes.slice());
       result = true;
@@ -154,18 +169,39 @@ export class RecipeService {
       }
     });
 
-    const updateRecipes: Observable<boolean> = this.http.patch(API_URL + 'recipes.json', { ...recipesObj })
-      .pipe(map(() => true));
-    
+    const updateRecipes: Observable<boolean> = this.getUserToken().pipe(
+      mergeMap((token: string) => {
+        return this.http.patch(
+          API_URL + 'recipes.json',
+          { ...recipesObj },
+          { params: new HttpParams().set('auth', token) }
+        );
+      }),
+      map(() => true)
+    );
+
     const deleteRecipes: Observable<boolean>[] = this.toBeDeleted.map(
-      (id: string) => this.http.delete(API_URL + `recipes/${id}.json`).pipe(map(() => true))
+      (id: string) => this.getUserToken().pipe(
+        mergeMap((token: string) => {
+          return this.http.delete(
+            API_URL + `recipes/${id}.json`,
+            { params: new HttpParams().set('auth', token) }
+          )
+        }),
+        map(() => true)
+      )
     );
 
     forkJoin([updateRecipes].concat(deleteRecipes))
-    .subscribe(
-      () => {},
-      () => {},
-      () => this.toBeDeleted = []
+      .subscribe({
+        complete: () => this.toBeDeleted = []
+      });
+  }
+
+  private getUserToken(): Observable<string> {
+    return this.authService.user$.pipe(
+      take(1),
+      map((user: User) => user?.token)
     );
   }
 }

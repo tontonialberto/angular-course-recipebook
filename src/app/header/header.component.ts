@@ -20,7 +20,7 @@ export class HeaderComponent implements OnDestroy {
   private subUser: Subscription;
 
   constructor(private recipeService: RecipeService, private authService: AuthService) {
-    this.subUser = this.authService.user.subscribe((user: User) => {
+    this.subUser = this.authService.user$.subscribe((user: User) => {
       this.isLoggedIn = (user !== null && user.token !== null);
     });
   }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
 import { User } from '../_models/user.model';
 
 const API_KEY = 'AIzaSyD7MT-aEUFT_hRdQ0DwbLDQOyt81ez9tN0';
@@ -17,10 +17,9 @@ interface FirebaseAuthResponse {
 })
 export class AuthService {
 
-  user = new Subject<User>();
+  user$ = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient) {
-    this.user.subscribe(user => console.log(user))
   }
 
   public signup(email: string, password: string): Observable<string> {
@@ -48,7 +47,7 @@ export class AuthService {
         if(res.idToken) {
           const expiresInSeconds: number = parseInt(res.expiresIn);
           const expDate: Date = new Date(new Date().getTime() + 1000 * expiresInSeconds);
-          this.user.next(new User(res.idToken, expDate));
+          this.user$.next(new User(res.idToken, expDate));
         }
       }),
       map((res: FirebaseAuthResponse) => {
