@@ -9,4 +9,10 @@ export class User {
             return this._token;
         }
     }
+
+    public static fromRaw(obj: object): User {
+        const _token = obj['_token'] ? obj['_token'] : null;
+        const _expirationDate = obj['_expirationDate'] ? obj['_expirationDate'] : null;
+        return new User(_token, new Date(_expirationDate));
+    }
 }
