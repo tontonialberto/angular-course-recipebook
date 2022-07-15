@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
 import { User } from '../_models/user.model';
-import { API_KEY, URL_AUTH_LOGIN, URL_AUTH_SIGNUP } from '../_shared/constants';
+import { URL_AUTH_LOGIN, URL_AUTH_SIGNUP } from '../_shared/constants';
 
 interface FirebaseAuthResponse {
   idToken: string;

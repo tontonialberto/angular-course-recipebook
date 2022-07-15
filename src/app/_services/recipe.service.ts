@@ -77,18 +77,14 @@ export class RecipeService {
     imagePath: string,
     ingredients: Ingredient[]): Observable<string> {
 
-    return this.getUserToken().pipe(
-      mergeMap((token: string) => {
-        return this.http.post(URL_DATA + 'recipes.json',
-          {
-            name: name,
-            description: description,
-            imagePath: imagePath,
-            ingredients: ingredients
-          },
-          { params: new HttpParams().set('auth', token) }
-        );
-      }),
+    return this.http.post(URL_DATA + 'recipes.json',
+      {
+        name: name,
+        description: description,
+        imagePath: imagePath,
+        ingredients: ingredients
+      }
+    ).pipe(
       map((res: { name: string }) => res.name),
       tap((newId: string) => {
         const recipe = new Recipe(newId, name, description, imagePath, ingredients);
@@ -112,21 +108,15 @@ export class RecipeService {
       result = of(false);
     }
     else {
-      result = this.getUserToken().pipe(
-        mergeMap((token: string) => {
-          const endpoint = URL_DATA + `recipes/${recipe.id}.json`;
-          return this.http.patch(endpoint,
-            {
-              name: recipe.name,
-              description: recipe.description,
-              imagePath: recipe.imagePath,
-              ingredients: recipe.ingredients
-            },
-            {
-              params: new HttpParams().set('auth', token)
-            }
-          );
-        }),
+      const endpoint = URL_DATA + `recipes/${recipe.id}.json`;
+      result = this.http.patch(endpoint,
+        {
+          name: recipe.name,
+          description: recipe.description,
+          imagePath: recipe.imagePath,
+          ingredients: recipe.ingredients
+        }
+      ).pipe(
         map(() => true),
         tap(() => {
           this.recipes[idx] = recipe;
@@ -164,39 +154,18 @@ export class RecipeService {
       }
     });
 
-    const updateRecipes: Observable<boolean> = this.getUserToken().pipe(
-      mergeMap((token: string) => {
-        return this.http.patch(
-          URL_DATA + 'recipes.json',
-          { ...recipesObj },
-          { params: new HttpParams().set('auth', token) }
-        );
-      }),
-      map(() => true)
-    );
+    const updateRecipes: Observable<boolean> = this.http.patch(
+      URL_DATA + 'recipes.json',
+      { ...recipesObj }
+    ).pipe(map(() => true));
 
     const deleteRecipes: Observable<boolean>[] = this.toBeDeleted.map(
-      (id: string) => this.getUserToken().pipe(
-        mergeMap((token: string) => {
-          return this.http.delete(
-            URL_DATA + `recipes/${id}.json`,
-            { params: new HttpParams().set('auth', token) }
-          )
-        }),
-        map(() => true)
-      )
+      (id: string) => this.http.delete(URL_DATA + `recipes/${id}.json`).pipe(map(() => true))
     );
 
     forkJoin([updateRecipes].concat(deleteRecipes))
       .subscribe({
         complete: () => this.toBeDeleted = []
       });
-  }
-
-  private getUserToken(): Observable<string> {
-    return this.authService.user$.pipe(
-      take(1),
-      map((user: User) => user?.token)
-    );
   }
 }
