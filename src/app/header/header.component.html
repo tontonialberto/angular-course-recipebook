@@ -17,6 +17,7 @@
                 <li routerLinkActive="active"><a *ngIf="!isLoggedIn" routerLink="/auth">Authenticate</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a *ngIf="isLoggedIn" (click)="onLogout()">Logout</a></li>
                 <li appDropdown class="dropdown" *ngIf="isLoggedIn">
                     <a class="dropdown-toggle">Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">

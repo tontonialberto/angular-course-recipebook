@@ -31,6 +31,10 @@ export class AuthService {
     return this.authenticate(email, password, apiUrl);
   }
 
+  public logout(): void {
+    this.user$.next(null);
+  }
+
   private authenticate(email: string, password: string, apiUrl: string): Observable<string> {
     return this.http.post(apiUrl,
       {

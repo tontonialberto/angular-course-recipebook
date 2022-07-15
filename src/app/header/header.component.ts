@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '../_models/user.model';
 import { AuthService } from '../_services/auth.service';
@@ -19,7 +20,8 @@ export class HeaderComponent implements OnDestroy {
 
   private subUser: Subscription;
 
-  constructor(private recipeService: RecipeService, private authService: AuthService) {
+  constructor(private recipeService: RecipeService, private authService: AuthService,
+      private router: Router) {
     this.subUser = this.authService.user$.subscribe((user: User) => {
       this.isLoggedIn = (user !== null && user.token !== null);
     });
@@ -39,5 +41,10 @@ export class HeaderComponent implements OnDestroy {
 
   onFetchData(): void {
     this.recipeService.fetchAll();
+  }
+
+  onLogout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth']);
   }
 }
