@@ -2,8 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
 import { User } from '../_models/user.model';
-
-const API_KEY = 'AIzaSyD7MT-aEUFT_hRdQ0DwbLDQOyt81ez9tN0';
+import { API_KEY, URL_AUTH_LOGIN, URL_AUTH_SIGNUP } from '../_shared/constants';
 
 interface FirebaseAuthResponse {
   idToken: string;
@@ -23,12 +22,12 @@ export class AuthService {
   }
 
   public signup(email: string, password: string): Observable<string> {
-    const apiUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp';
+    const apiUrl = URL_AUTH_SIGNUP;
     return this.authenticate(email, password, apiUrl);
   }
 
   public login(email: string, password: string): Observable<string> {
-    const apiUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword';
+    const apiUrl = URL_AUTH_LOGIN;
     return this.authenticate(email, password, apiUrl);
   }
 
@@ -38,9 +37,6 @@ export class AuthService {
         email: email,
         password: password,
         returnSecureToken: true
-      },
-      {
-        params: new HttpParams().set('key', API_KEY)
       }
     ).pipe(
       tap((res: FirebaseAuthResponse) => {

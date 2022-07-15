@@ -5,10 +5,9 @@ import { map, mergeMap, take, tap } from 'rxjs/operators';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
 import { User } from '../_models/user.model';
+import { URL_DATA } from '../_shared/constants';
 import { AuthService } from './auth.service';
 import { ShoppingListService } from './shopping-list.service';
-
-const API_URL = 'https://food-fa34d-default-rtdb.europe-west1.firebasedatabase.app/';
 
 @Injectable({
   providedIn: 'root'
@@ -34,29 +33,25 @@ export class RecipeService {
    * and store a local copy.
    */
   public fetchAll(): void {
-    this.getUserToken().pipe(
-      mergeMap((token: string) => {
-        return this.http.get(API_URL + 'recipes.json',
-          {
-            params: new HttpParams().set('auth', token)
-          })
-      }),
-      map((res: { [key: string]: Recipe }) => {
-        if (null === res) {
-          return [];
-        }
-        else {
-          return Object.keys(res).map(
-            (key: string) => {
-              return Recipe.fromRaw({ ...res[key], id: key });
-            }
-          );
-        }
-      })
-    ).subscribe((recipes: Recipe[]) => {
-      this.recipes = recipes;
-      this.recipesChanged.next(this.recipes.slice());
-    });
+
+    this.http.get(URL_DATA + 'recipes.json')
+      .pipe(
+        map((res: { [key: string]: Recipe }) => {
+          if (null === res) {
+            return [];
+          }
+          else {
+            return Object.keys(res).map(
+              (key: string) => {
+                return Recipe.fromRaw({ ...res[key], id: key });
+              }
+            );
+          }
+        })
+      ).subscribe((recipes: Recipe[]) => {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+      });
   }
 
   /**
@@ -84,7 +79,7 @@ export class RecipeService {
 
     return this.getUserToken().pipe(
       mergeMap((token: string) => {
-        return this.http.post(API_URL + 'recipes.json',
+        return this.http.post(URL_DATA + 'recipes.json',
           {
             name: name,
             description: description,
@@ -119,7 +114,7 @@ export class RecipeService {
     else {
       result = this.getUserToken().pipe(
         mergeMap((token: string) => {
-          const endpoint = API_URL + `recipes/${recipe.id}.json`;
+          const endpoint = URL_DATA + `recipes/${recipe.id}.json`;
           return this.http.patch(endpoint,
             {
               name: recipe.name,
@@ -172,7 +167,7 @@ export class RecipeService {
     const updateRecipes: Observable<boolean> = this.getUserToken().pipe(
       mergeMap((token: string) => {
         return this.http.patch(
-          API_URL + 'recipes.json',
+          URL_DATA + 'recipes.json',
           { ...recipesObj },
           { params: new HttpParams().set('auth', token) }
         );
@@ -184,7 +179,7 @@ export class RecipeService {
       (id: string) => this.getUserToken().pipe(
         mergeMap((token: string) => {
           return this.http.delete(
-            API_URL + `recipes/${id}.json`,
+            URL_DATA + `recipes/${id}.json`,
             { params: new HttpParams().set('auth', token) }
           )
         }),
