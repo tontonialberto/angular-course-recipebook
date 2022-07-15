@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { User } from '../_models/user.model';
 import { AuthService } from '../_services/auth.service';
 import { RecipeService } from '../_services/recipe.service';
@@ -7,7 +8,7 @@ import { RecipeService } from '../_services/recipe.service';
   selector: 'app-header',
   templateUrl: './header.component.html'
 })
-export class HeaderComponent implements OnInit { 
+export class HeaderComponent implements OnDestroy { 
 
   // Used for collapsible navbar on mobile devices.
   showLinks: boolean = false;
@@ -16,13 +17,16 @@ export class HeaderComponent implements OnInit {
 
   isLoggedIn: boolean = false;
 
+  private subUser: Subscription;
+
   constructor(private recipeService: RecipeService, private authService: AuthService) {
-    this.authService.user.subscribe((user: User) => {
+    this.subUser = this.authService.user.subscribe((user: User) => {
       this.isLoggedIn = (user !== null && user.token !== null);
     });
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.subUser.unsubscribe();
   }
 
   toggleNavigation(): void {
