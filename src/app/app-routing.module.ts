@@ -10,6 +10,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 import { IngredientResolver } from './_services/ingredient-resolver.service';
 import { RecipeResolver } from './_services/recipe-resolver.service';
+import { UnloggedGuard } from './_services/unlogged-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/shopping-list', pathMatch: 'full' },
@@ -33,7 +34,7 @@ const routes: Routes = [
     { path: ':id', component: RecipeDetailComponent, resolve: { recipe: RecipeResolver } },
     { path: ':id/edit', component: RecipeEditComponent, resolve: { recipe: RecipeResolver } }
   ] },
-  { path: 'auth', component: AuthComponent },
+  { path: 'auth', component: AuthComponent, canActivate: [UnloggedGuard] },
   { path: '**', component: ErrorPageComponent, data: { message: 'Oops.. this page does not exist!' } }
 ];
 
