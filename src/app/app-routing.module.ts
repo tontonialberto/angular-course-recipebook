@@ -7,6 +7,7 @@ import { RecipeEditComponent } from './recipe-list/recipe-edit/recipe-edit.compo
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { ShoppingEditFormComponent } from './shopping-list/shopping-edit-form/shopping-edit-form.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
+import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 import { IngredientResolver } from './_services/ingredient-resolver.service';
 import { RecipeResolver } from './_services/recipe-resolver.service';
 
@@ -26,7 +27,7 @@ const routes: Routes = [
       data: { editMode: false, ingredient: null }
     },
   ] },
-  { path: 'recipes', component: RecipeListComponent, children: [
+  { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard], children: [
     { path: '', component: ErrorPageComponent, data: { message: 'Please select a recipe!' }},
     { path: 'new', component: RecipeEditComponent },
     { path: ':id', component: RecipeDetailComponent, resolve: { recipe: RecipeResolver } },
