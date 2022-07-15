@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { finalize, Observable, Subscriber } from 'rxjs';
 import { AuthService } from '../_services/auth.service';
 
@@ -21,7 +22,7 @@ export class AuthComponent implements OnInit {
 
   successMessage: string = null;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -59,6 +60,10 @@ export class AuthComponent implements OnInit {
           if(token) {
             this.errorMessage = null;
             this.successMessage = successMessage;
+          }
+
+          if(this.loginMode) {
+            this.router.navigate(['/shopping-list']);
           }
         },
         error: (error: string) => {
