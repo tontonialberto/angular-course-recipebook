@@ -21,9 +21,6 @@ export class DropdownDirective {
 
   constructor(private elementRef: ElementRef) {
   }
-
-  ngOnInit() {
-  }
   
   @HostListener('click') onClick(): void {
     this.openDropdown = !this.openDropdown;

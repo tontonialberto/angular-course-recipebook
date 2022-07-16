@@ -10,10 +10,9 @@ import { AuthService } from './auth.service';
 import { ShoppingListService } from './shopping-list.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipeService {
-
   recipesChanged = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [];
@@ -22,33 +21,33 @@ export class RecipeService {
   // locally deleted.
   private toBeDeleted: string[] = [];
 
-  constructor(private shoppingListService: ShoppingListService,
+  constructor(
+    private shoppingListService: ShoppingListService,
     private http: HttpClient,
-    private authService: AuthService) {
+    private authService: AuthService
+  ) {
     this.fetchAll();
   }
 
   /**
-   * Get all the recipes from the backend 
+   * Get all the recipes from the backend
    * and store a local copy.
    */
   public fetchAll(): void {
-
-    this.http.get(URL_DATA + 'recipes.json')
+    this.http
+      .get(URL_DATA + 'recipes.json')
       .pipe(
         map((res: { [key: string]: Recipe }) => {
           if (null === res) {
             return [];
-          }
-          else {
-            return Object.keys(res).map(
-              (key: string) => {
-                return Recipe.fromRaw({ ...res[key], id: key });
-              }
-            );
+          } else {
+            return Object.keys(res).map((key: string) => {
+              return Recipe.fromRaw({ ...res[key], id: key });
+            });
           }
         })
-      ).subscribe((recipes: Recipe[]) => {
+      )
+      .subscribe((recipes: Recipe[]) => {
         this.recipes = recipes;
         this.recipesChanged.next(this.recipes.slice());
       });
@@ -75,23 +74,29 @@ export class RecipeService {
     name: string,
     description: string,
     imagePath: string,
-    ingredients: Ingredient[]): Observable<string> {
-
-    return this.http.post(URL_DATA + 'recipes.json',
-      {
+    ingredients: Ingredient[]
+  ): Observable<string> {
+    return this.http
+      .post(URL_DATA + 'recipes.json', {
         name: name,
         description: description,
         imagePath: imagePath,
-        ingredients: ingredients
-      }
-    ).pipe(
-      map((res: { name: string }) => res.name),
-      tap((newId: string) => {
-        const recipe = new Recipe(newId, name, description, imagePath, ingredients);
-        this.recipes.push(recipe);
-        this.recipesChanged.next(this.recipes.slice());
+        ingredients: ingredients,
       })
-    );
+      .pipe(
+        map((res: { name: string }) => res.name),
+        tap((newId: string) => {
+          const recipe = new Recipe(
+            newId,
+            name,
+            description,
+            imagePath,
+            ingredients
+          );
+          this.recipes.push(recipe);
+          this.recipesChanged.next(this.recipes.slice());
+        })
+      );
   }
 
   public addToShoppingList(ingredients: Ingredient[]): void {
@@ -101,35 +106,34 @@ export class RecipeService {
   }
 
   public update(recipe: Recipe): Observable<boolean> {
-    const idx = this.recipes.findIndex(r => r.id === recipe.id);
+    const idx = this.recipes.findIndex((r) => r.id === recipe.id);
     let result: Observable<boolean> = null;
 
     if (-1 === idx) {
       result = of(false);
-    }
-    else {
+    } else {
       const endpoint = URL_DATA + `recipes/${recipe.id}.json`;
-      result = this.http.patch(endpoint,
-        {
+      result = this.http
+        .patch(endpoint, {
           name: recipe.name,
           description: recipe.description,
           imagePath: recipe.imagePath,
-          ingredients: recipe.ingredients
-        }
-      ).pipe(
-        map(() => true),
-        tap(() => {
-          this.recipes[idx] = recipe;
-          this.recipesChanged.next(this.recipes.slice());
+          ingredients: recipe.ingredients,
         })
-      );
+        .pipe(
+          map(() => true),
+          tap(() => {
+            this.recipes[idx] = recipe;
+            this.recipesChanged.next(this.recipes.slice());
+          })
+        );
     }
 
     return result;
   }
 
   public remove(id: string): boolean {
-    const idx = this.recipes.findIndex(r => id === r.id);
+    const idx = this.recipes.findIndex((r) => id === r.id);
     let result: boolean = false;
 
     if (-1 !== idx) {
@@ -144,28 +148,29 @@ export class RecipeService {
 
   // Store the local recipe list on the server.
   public saveAll(): void {
-    let recipesObj: { [id: string]: { name, description, imagePath, ingredients } } = {};
+    let recipesObj: {
+      [id: string]: { name; description; imagePath; ingredients };
+    } = {};
     this.recipes.map((r: Recipe) => {
       recipesObj[r.id] = {
         name: r.name,
         description: r.description,
         imagePath: r.imagePath,
-        ingredients: r.ingredients
-      }
+        ingredients: r.ingredients,
+      };
     });
 
-    const updateRecipes: Observable<boolean> = this.http.patch(
-      URL_DATA + 'recipes.json',
-      { ...recipesObj }
-    ).pipe(map(() => true));
+    const updateRecipes: Observable<boolean> = this.http
+      .patch(URL_DATA + 'recipes.json', { ...recipesObj })
+      .pipe(map(() => true));
 
     const deleteRecipes: Observable<boolean>[] = this.toBeDeleted.map(
-      (id: string) => this.http.delete(URL_DATA + `recipes/${id}.json`).pipe(map(() => true))
+      (id: string) =>
+        this.http.delete(URL_DATA + `recipes/${id}.json`).pipe(map(() => true))
     );
 
-    forkJoin([updateRecipes].concat(deleteRecipes))
-      .subscribe({
-        complete: () => this.toBeDeleted = []
-      });
+    forkJoin([updateRecipes].concat(deleteRecipes)).subscribe({
+      complete: () => (this.toBeDeleted = []),
+    });
   }
 }
