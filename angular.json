@@ -104,6 +104,16 @@
               "src/**/*.html"
             ]
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "food:build:production",
+            "firebaseProject": "food-fa34d",
+            "firebaseHostingSite": "food-fa34d"
+          }
         }
       }
     }

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "food-fa34d": {
+      "hosting": {
+        "food": [
+          "food-fa34d"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "food-fa34d"
+  }
+}
