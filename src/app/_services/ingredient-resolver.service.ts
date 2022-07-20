@@ -18,7 +18,6 @@ export class IngredientResolver implements Resolve<ShoppingIngredient> {
         Observable<ShoppingIngredient> | 
         Promise<ShoppingIngredient> {
 
-    console.log('resolver')
     const id = +route.params['id'];
     const ingredient = this.shoppingListService.getById(id);
 

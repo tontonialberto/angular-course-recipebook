@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, forkJoin, merge, Observable, of, Subject } from 'rxjs';
 import { map, mergeMap, take, tap } from 'rxjs/operators';
 import { Ingredient } from '../_models/ingredient.model';
 import { Recipe } from '../_models/recipe.model';
@@ -14,6 +14,8 @@ import { ShoppingListService } from './shopping-list.service';
 })
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
+
+  recipesLoading = new BehaviorSubject<boolean>(false);
 
   private recipes: Recipe[] = [];
 
@@ -33,6 +35,7 @@ export class RecipeService {
    * and store a local copy.
    */
   public fetchAll(): Observable<Recipe[]> {
+    this.recipesLoading.next(true);
     return this.http
       .get(URL_DATA + 'recipes.json')
       .pipe(
@@ -48,6 +51,7 @@ export class RecipeService {
         tap((recipes: Recipe[]) => {
           this.recipes = recipes;
           this.recipesChanged.next(this.recipes.slice());
+          this.recipesLoading.next(false);
         })
       );
   }

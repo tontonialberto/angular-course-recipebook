@@ -7,6 +7,9 @@
                 </button>
             </div>
             <!-- RECIPE LIST ITEM BEGIN -->
+            <div class="col-md-12" style="margin-top: 10px;" *ngIf="isLoading">
+                <app-spinner></app-spinner>
+            </div>
             <div *ngFor="let recipe of recipes" class="col-md-12 media">
                 <div class="col-md-12" class="item">
                     <h4>
