@@ -15,7 +15,8 @@ import { ShoppingListService } from './shopping-list.service';
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
 
-  recipesLoading = new BehaviorSubject<boolean>(false);
+
+  recipeSaved = new BehaviorSubject<Recipe>(null);
 
   private recipes: Recipe[] = [];
 
@@ -35,7 +36,6 @@ export class RecipeService {
    * and store a local copy.
    */
   public fetchAll(): Observable<Recipe[]> {
-    this.recipesLoading.next(true);
     return this.http
       .get(URL_DATA + 'recipes.json')
       .pipe(
@@ -51,7 +51,6 @@ export class RecipeService {
         tap((recipes: Recipe[]) => {
           this.recipes = recipes;
           this.recipesChanged.next(this.recipes.slice());
-          this.recipesLoading.next(false);
         })
       );
   }

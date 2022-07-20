@@ -14,28 +14,23 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   private subRecipesChanged: Subscription;
 
-  private subRecipesLoading: Subscription;
-
   isLoading: boolean = false;
 
   constructor(private recipeService: RecipeService) { }
   
   ngOnInit(): void {
-    this.recipeService.fetchAll().subscribe();
+    this.isLoading = true;
     this.subRecipesChanged = this.recipeService.recipesChanged.subscribe(
       (recipes: Recipe[]) => {
         this.recipes = recipes;
       }
-    )
-    this.subRecipesLoading = this.recipeService.recipesLoading.subscribe(
-      (isLoading: boolean) => {
-        this.isLoading = isLoading;
-      }
     );
+    this.recipeService.fetchAll().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   ngOnDestroy(): void {
     this.subRecipesChanged.unsubscribe();
-    this.subRecipesLoading.unsubscribe();
   }
 }
