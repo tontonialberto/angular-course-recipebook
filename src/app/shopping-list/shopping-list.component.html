@@ -16,19 +16,41 @@
 <hr>
 <!-- INGREDIENTS LIST BEGIN -->
 <div class="row">
-    <div 
+    <div class="col-xs-12">
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let ingredient of ingredients">
+                {{ ingredient.name }} ({{ ingredient.quantity }})
+                <span class="badge" style="background-color: transparent; color: black;">
+                    <button 
+                        class="btn btn-success btn-xs" 
+                        (click)="onIngredientClick(ingredient)">
+                        Done
+                    </button> | 
+                    <button 
+                        class="btn btn-warning btn-xs" 
+                        (click)="onEdit(ingredient)" 
+                        [routerLink]="['edit', ingredient.id]">
+                        Edit
+                    </button>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <!--
+        <div 
     *ngFor="let ingredient of ingredients" 
     class="col-sm-4 col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 (click)="onIngredientClick(ingredient)" class="panel-title">
+                <h3  class="panel-title">
                     {{ ingredient.name }}, {{ ingredient.quantity }}
                 </h3>
             </div>
             <div class="panel-body">
-                <button type="button" class="btn btn-info" (click)="onEdit(ingredient)" [routerLink]="['edit', ingredient.id]">Edit</button>
+                <button type="button" class="btn btn-info" >Edit</button>
             </div>
         </div>
     </div>
+    -->
 </div>
 <!-- INGREDIENTS LIST END -->
