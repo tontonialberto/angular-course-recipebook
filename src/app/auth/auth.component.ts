@@ -6,8 +6,7 @@ import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css'],
+  templateUrl: './auth.component.html'
 })
 export class AuthComponent {
   // If false, it's signup mode.

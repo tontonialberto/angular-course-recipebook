@@ -10,8 +10,8 @@
             <a class="navbar-brand">Food App</a>
         </div>
 
-        <div class="navbar-collapse" [ngClass]="{'collapse': !showLinks}" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
+        <div class="navbar-collapse" [ngClass]="{'collapse': !showLinks}">
+            <ul class="nav navbar-nav" (click)="toggleNavigation()">
                 <li routerLinkActive="active"><a *ngIf="isLoggedIn" routerLink="/shopping-list">Shopping List</a></li>
                 <li routerLinkActive="active"><a *ngIf="isLoggedIn" routerLink="/recipes">Recipes</a></li>
                 <li routerLinkActive="active"><a *ngIf="!isLoggedIn" routerLink="/auth">Authenticate</a></li>

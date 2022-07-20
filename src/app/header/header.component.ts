@@ -7,7 +7,7 @@ import { RecipeService } from '../_services/recipe.service';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html'
+  templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnDestroy { 
 
