@@ -15,8 +15,9 @@ import { ShoppingListService } from './shopping-list.service';
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
 
-
   recipeSaved = new BehaviorSubject<Recipe>(null);
+
+  singleRecipeUpdating = new BehaviorSubject<boolean>(false);
 
   private recipes: Recipe[] = [];
 
@@ -78,6 +79,7 @@ export class RecipeService {
     imagePath: string,
     ingredients: Ingredient[]
   ): Observable<string> {
+    this.singleRecipeUpdating.next(true);
     return this.http
       .post(URL_DATA + 'recipes.json', {
         name: name,
@@ -97,6 +99,7 @@ export class RecipeService {
           );
           this.recipes.push(recipe);
           this.recipesChanged.next(this.recipes.slice());
+          this.singleRecipeUpdating.next(false);
         })
       );
   }
@@ -110,6 +113,8 @@ export class RecipeService {
   public update(recipe: Recipe): Observable<boolean> {
     const idx = this.recipes.findIndex((r) => r.id === recipe.id);
     let result: Observable<boolean> = null;
+
+    this.singleRecipeUpdating.next(true);
 
     if (-1 === idx) {
       result = of(false);
@@ -127,6 +132,7 @@ export class RecipeService {
           tap(() => {
             this.recipes[idx] = recipe;
             this.recipesChanged.next(this.recipes.slice());
+            this.singleRecipeUpdating.next(false);
           })
         );
     }
