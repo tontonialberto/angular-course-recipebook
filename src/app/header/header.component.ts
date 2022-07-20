@@ -40,7 +40,7 @@ export class HeaderComponent implements OnDestroy {
   }
 
   onFetchData(): void {
-    this.recipeService.fetchAll();
+    this.recipeService.fetchAll().subscribe();
   }
 
   onLogout(): void {

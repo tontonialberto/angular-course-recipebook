@@ -26,15 +26,14 @@ export class RecipeService {
     private http: HttpClient,
     private authService: AuthService
   ) {
-    this.fetchAll();
   }
 
   /**
    * Get all the recipes from the backend
    * and store a local copy.
    */
-  public fetchAll(): void {
-    this.http
+  public fetchAll(): Observable<Recipe[]> {
+    return this.http
       .get(URL_DATA + 'recipes.json')
       .pipe(
         map((res: { [key: string]: Recipe }) => {
@@ -45,12 +44,12 @@ export class RecipeService {
               return Recipe.fromRaw({ ...res[key], id: key });
             });
           }
+        }),
+        tap((recipes: Recipe[]) => {
+          this.recipes = recipes;
+          this.recipesChanged.next(this.recipes.slice());
         })
-      )
-      .subscribe((recipes: Recipe[]) => {
-        this.recipes = recipes;
-        this.recipesChanged.next(this.recipes.slice());
-      });
+      );
   }
 
   /**
