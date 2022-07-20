@@ -16,6 +16,7 @@ import { ShoppingEditFormComponent } from './shopping-list/shopping-edit-form/sh
 import { AuthComponent } from './auth/auth.component';
 import { SpinnerComponent } from './_shared/spinner/spinner.component';
 import { AuthInterceptor } from './_services/auth-interceptor.service';
+import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AuthInterceptor } from './_services/auth-interceptor.service';
     RecipeEditComponent,
     ShoppingEditFormComponent,
     AuthComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    BottomNavbarComponent
   ],
   imports: [
     BrowserModule,
